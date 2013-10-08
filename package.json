@@ -1,0 +1,28 @@
+{
+  "name": "parshap-portfolio",
+  "version": "0.0.0",
+  "description": "Parsha Pourkhomami's Portfolio",
+  "main": "generate.js",
+  "dependencies": {
+    "concat-stream": "~1.0.1",
+    "connect": "~2.9.0",
+    "duplexer": "~0.1.1",
+    "hogan.js": "~3.0.0",
+    "marked": "~0.2.9",
+    "through": "~2.3.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:parshap/portfolio.git"
+  },
+  "author": "Parsha Pourkhomami",
+  "license": "Public Domain",
+  "bugs": {
+    "url": "https://github.com/parshap/portfolio/issues"
+  }
+}
