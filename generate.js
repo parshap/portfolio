@@ -15,6 +15,7 @@ var fs = require("fs"),
 module.exports = function() {
 	return combineStreams([
 		css(),
+		js(),
 		home(),
 		portfolio(),
 	]);
@@ -141,12 +142,17 @@ function lesss(p) {
 function home() {
 	return markdown("home.md")
 		.pipe(template("home"))
-		.pipe(page("index.html"));
+		.pipe(page("index.html", "text/html"));
 }
 
 function css() {
 	return lesss("style.less")
-		.pipe(page("style.css"));
+		.pipe(page("style.css", "text/css"));
+}
+
+function js() {
+	return source("script.js")
+		.pipe(page("script.js", "text/javascript"));
 }
 
 function portfolio() {
