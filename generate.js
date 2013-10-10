@@ -2,17 +2,21 @@
 "use strict";
 
 var fs = require("fs"),
+	path = require("path"),
 	domain = require("domain").create,
 	concat = require("concat-stream"),
+	map = require("map-stream"),
 	through = require("through"),
 	marked = require("marked"),
 	duplexer = require("duplexer"),
-	Hogan = require("hogan.js");
+	Hogan = require("hogan.js"),
+	less = require("less");
 
 module.exports = function() {
 	return combineStreams([
 		css(),
 		home(),
+		portfolio(),
 	]);
 };
 
@@ -67,13 +71,14 @@ function streamDomain(stream) {
 }
 
 // Put data piped into stream inside of template
-function template() {
+function template(name) {
 	var input = through(),
 		output = through();
 
 	input.pipe(concat(function(data) {
 		mustache("template.mustache", {
 			content: data,
+			name: name,
 		}).pipe(output);
 	}));
 
@@ -109,19 +114,49 @@ function source(path) {
 	return stream;
 }
 
+function lesss(p) {
+	var options = {
+		filename: p,
+		paths: [ path.dirname(p) ],
+		sourceMap: true,
+		optimization: 0,
+		compile: true,
+		compress: false,
+		dumpLineNumbers: "all",
+	};
+	return source(p).pipe(map(compile));
+
+	function compile(src, callback) {
+		less.render(src, options, function(err, css) {
+			if (err) {
+				err.message = less.formatError(err);
+			}
+			callback(err, css);
+		});
+	}
+}
+
 // -- Pages
 
 function home() {
 	return markdown("home.md")
-		.pipe(template())
-		.pipe(page("home"));
+		.pipe(template("home"))
+		.pipe(page("index.html"));
 }
 
 function css() {
-	var streams = ["bootstrap.css", "style.css"].map(function(path) {
-		return fs.createReadStream("style/" + path);
-	});
-	return concatStreams(streams).pipe(page("style.css"));
+	return lesss("style.less")
+		.pipe(page("style.css"));
+}
+
+function portfolio() {
+	var streams = [
+		markdown("portfolio-intro.md"),
+		// projects(),
+	];
+	return concatStreams(streams)
+		.pipe(template("portfolio"))
+		.pipe(page("portfolio.html"));
 }
 
 function page(path) {
