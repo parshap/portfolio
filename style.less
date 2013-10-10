@@ -1,21 +1,30 @@
 @import "./vendor/bootstrap/less/bootstrap.less";
 
-#home main {
-	width: 320px;
-	margin: 0 auto;
+@grid-gutter-width: 20px;
+
+main {
 }
 
-#home h1 {
-	font-size: 72px;
-}
+#home {
+	main {
+		max-width: 600px;
+	}
 
-#home h1 a {
-	color: #333;
-	text-decoration: none;
-}
+	h1 {
+		font-size: 40px;
+		border-bottom: 1px solid;
+		margin: 0.5em 0 0.5em 0;
+		padding: 0 0 0.1em 0;
+	}
 
-@media (min-height: 1000px) {
-	#home body {
-		margin-top: 200px;
+	h1 a {
+		color: #333;
+		text-decoration: none;
+	}
+
+	@media (min-height: 1000px) {
+		main {
+			margin-top: 200px;
+		}
 	}
 }
