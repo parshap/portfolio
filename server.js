@@ -5,7 +5,7 @@ var connect = require("connect"),
 	generate = require("./generate");
 
 var limitedGen = (function() {
-	var TTL = 1000;
+	var TTL = 4000;
 	var lastTime;
 	var site;
 
