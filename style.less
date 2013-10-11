@@ -2,29 +2,109 @@
 
 @grid-gutter-width: 20px;
 
-main {
+.resp-font-size(@xs) {
+	.resp-font-size(@xs,
+		round(@xs * (@screen-sm / @screen-xs)),
+		round(@xs * (@screen-md / @screen-xs)),
+		round(@xs * (@screen-lg / @screen-xs)));
 }
 
-#home {
-	main {
-		max-width: 600px;
+.resp-font-size(@xs, @sm) {
+	.resp-font-size(@xs, @sm,
+		round(@xs * (@screen-md / @screen-xs)),
+		round(@xs * (@screen-lg / @screen-xs)));
+}
+
+.resp-font-size(@xs, @sm, @md) {
+	.resp-font-size(@xs, @sm, @md, round(@xs * (@screen-lg / @screen-xs)));
+}
+
+.resp-font-size(@xs, @sm, @md, @lg) {
+	/* Extra small devices (phones, up to 480px) */
+	/* No media query since this is the default in Bootstrap */
+	font-size: @xs;
+
+	/* Small devices (tablets, 768px and up) */
+	@media (min-width: @screen-sm) {
+		font-size: @sm;
 	}
 
+	/* Medium devices (desktops, 992px and up) */
+	@media (min-width: @screen-md) {
+		font-size: @md;
+	}
+
+	/* Large devices (large desktops, 1200px and up) */
+	@media (min-width: @screen-lg) {
+		font-size: @lg;
+	}
+}
+
+#header {
+	.resp-font-size(24px);
+	margin: 0 0 0.5em 0;
+	padding: 0.25em 0;
+	border-bottom: 1px solid;
 	h1 {
-		font-size: 40px;
-		border-bottom: 1px solid;
-		margin: 0.5em 0 0.5em 0;
-		padding: 0 0 0.1em 0;
-	}
+		.resp-font-size(24px);
+		margin: 0 auto;
+		padding: 0;
 
-	h1 a {
-		color: #333;
-		text-decoration: none;
-	}
-
-	@media (min-height: 1000px) {
-		main {
-			margin-top: 200px;
+		a {
+			color: @text-color !important;
+			text-decoration: none !important;
 		}
+	}
+}
+
+#btn-portfolio {
+	.btn;
+	.btn-info;
+}
+
+#btn-resume {
+	.btn;
+	.btn-success;
+}
+
+#intro {
+	@media (min-width: 768px) and (min-height: 800px) {
+		margin-top: 120px;
+	}
+
+	.container-fixed();
+	max-width: 600px;
+
+	.heading {
+		border-bottom: 1px solid;
+		margin: 0.4em 0;
+		padding: 0 0 0.1em 0;
+		a {
+			color: @text-color !important;
+			text-decoration: none !important;
+		}
+	}
+}
+
+#projects {
+	.list-unstyled;
+}
+
+#intro, #portfolio {
+	display: none;
+}
+
+html.intro {
+	#header {
+		display: none;
+	}
+	#intro {
+		display: block;
+	}
+}
+
+html.portfolio {
+	#portfolio {
+		display: block;
 	}
 }

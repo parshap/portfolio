@@ -7,36 +7,50 @@ var fs = require("fs"),
 	concat = require("concat-stream"),
 	map = require("map-stream"),
 	through = require("through"),
-	marked = require("marked"),
 	duplexer = require("duplexer"),
 	Hogan = require("hogan.js"),
-	less = require("less");
+	less = require("less"),
+	findit = require("findit"),
+	mime = require("mime");
+
+var PROJECTS = require("./projects.json");
 
 module.exports = function() {
 	return combineStreams([
 		css(),
 		js(),
 		home(),
-		portfolio(),
-	]);
+		images(),
+	]).end();
 };
 
 // Combine streams into single streams emitting all data events and a single
 // "end" event when all streams have ended
 function combineStreams(streams) {
-	var stream = through(),
-		waiting = streams.length;
-	streams.forEach(function(s) {
+	var ended = false,
+		waiting = 0;
+	var stream = through(addStream, function() {
+		ended = true;
+		maybeEnd();
+	});
+	streams && streams.forEach(addStream);
+	return stream;
+
+	function maybeEnd() {
+		if (ended && waiting === 0) {
+			stream.emit("end");
+		}
+	}
+
+	function addStream(s) {
+		waiting += 1;
 		s.on("data", stream.emit.bind(stream, "data"));
 		s.on("error", stream.emit.bind(stream, "error"));
 		s.on("end", function() {
 			waiting -= 1;
-			if (waiting === 0) {
-				stream.emit("end");
-			}
+			maybeEnd();
 		});
-	});
-	return stream;
+	}
 }
 
 // Like combineStream but preserve order of data events
@@ -95,13 +109,6 @@ function mustache(path, data) {
 	}));
 }
 
-// Render markdown at path
-function markdown(path) {
-	return source(path).pipe(through(function(src) {
-		this.emit("data", marked(src));
-	}));
-}
-
 function noop() {}
 
 // Stream that emits entire file content as a single data event
@@ -137,10 +144,48 @@ function lesss(p) {
 	}
 }
 
+function projects() {
+	return concatStreams(PROJECTS.map(function(project) {
+		return mustache("project.mustache", project);
+	}));
+}
+
+function portfolio() {
+	var out = through();
+	projects().pipe(concat(function(projects) {
+		mustache("portfolio.mustache", {
+			projects: projects,
+		}).pipe(out);
+	}));
+	return out;
+}
+
+// Generate static file contained in given directory
+function staticDir(dirPath) {
+	var stream = combineStreams();
+
+	findit(dirPath)
+		.on("file", onFile)
+		.on("end", stream.end.bind(stream));
+
+	return stream;
+
+	function onFile(filePath) {
+		console.log(filePath);
+		var mimeType = mime.lookup(filePath);
+		stream.write(fs.createReadStream(filePath)
+			.pipe(page(filePath, mimeType)));
+	}
+}
+
 // -- Pages
 
 function home() {
-	return markdown("home.md")
+	var streams = [
+		mustache("intro.html"),
+		portfolio(),
+	];
+	return concatStreams(streams)
 		.pipe(template("home"))
 		.pipe(page("index.html", "text/html"));
 }
@@ -155,14 +200,8 @@ function js() {
 		.pipe(page("script.js", "text/javascript"));
 }
 
-function portfolio() {
-	var streams = [
-		markdown("portfolio-intro.md"),
-		// projects(),
-	];
-	return concatStreams(streams)
-		.pipe(template("portfolio"))
-		.pipe(page("portfolio.html"));
+function images() {
+	return staticDir("images");
 }
 
 function page(path) {
