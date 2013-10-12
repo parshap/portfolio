@@ -145,7 +145,11 @@ function lesss(p) {
 }
 
 function projects() {
-	return concatStreams(PROJECTS.map(function(project) {
+	var projects = PROJECTS.map(function(project, i) {
+		project.isLast = i === PROJECTS.length - 1;
+		return project;
+	});
+	return concatStreams(projects.map(function(project) {
 		return mustache("project.mustache", project);
 	}));
 }

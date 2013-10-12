@@ -13,6 +13,7 @@ function fitText(el, options) {
 		var size = el.clientWidth * k;
 		size = Math.min(size, max);
 		size = Math.max(size, min);
+		size = Math.round(size);
 		el.style.fontSize = size + "px";
 	}
 
@@ -22,5 +23,21 @@ function fitText(el, options) {
 	});
 }
 
-var heading = document.querySelector("h1");
+var html = document.querySelector("html"),
+	heading = document.querySelector("#intro .heading"),
+	homeLinks = document.querySelectorAll(".link-home"),
+	btnPortfolio = document.querySelector("#btn-portfolio");
+
 fitText(heading, { scale: 1.35 });
+
+Array.prototype.forEach.call(homeLinks, function(el) {
+	el.addEventListener("click", function(e) {
+		html.className = "home";
+		e.preventDefault();
+	});
+});
+
+btnPortfolio.addEventListener("click", function(e) {
+	html.className = "portfolio";
+	e.preventDefault();
+});
