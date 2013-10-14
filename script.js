@@ -23,19 +23,13 @@ function fitText(el, options) {
 	});
 }
 
-var html = document.querySelector("html"),
-	heading = document.querySelector("#intro .heading"),
-	homeLinks = document.querySelectorAll(".link-home"),
-	btnPortfolio = document.querySelector("#btn-portfolio");
+var q = document.querySelector.bind(document),
+	qa = document.querySelectorAll.bind(document);
 
-fitText(heading, { scale: 1.35 });
+var html = q("html"),
+	btnPortfolio = q("#btn-portfolio");
 
-Array.prototype.forEach.call(homeLinks, function(el) {
-	el.addEventListener("click", function(e) {
-		html.className = "home";
-		e.preventDefault();
-	});
-});
+fitText(q("#intro .heading"), { scale: 1.35 });
 
 btnPortfolio.addEventListener("click", function(e) {
 	html.className = "portfolio";

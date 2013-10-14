@@ -1,5 +1,8 @@
-<li>
-	<h2 class="title">{{title}}</h2>
-	<p class="desc">{{desc}}</p>
-	{{#images}}<img src="/images/{{.}}" />{{/images}}
+<li class="project">
+	<h2 class="title">{{{title}}}</h2>
+	<div class="thumb"><img src="/images/{{thumb}}" /></div>
+	<div class="info">
+		<span class="date">{{date}}</span>
+		<span class="desc">{{desc}}</span>
+	</div>
 </li>
