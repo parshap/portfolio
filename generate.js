@@ -181,30 +181,31 @@ function home() {
 	stream.end();
 	return stream
 		.pipe(template("home"))
-		.pipe(page("index.html", "text/html"));
+		.pipe(page("index.html", "text/html; charset=UTF-8"));
 }
 
 function css() {
 	return lesss("style.less")
-		.pipe(page("style.css", "text/css"));
+		.pipe(page("style.css", "text/css; charset=UTF-8"));
 }
 
 function js() {
 	return source("script.js")
-		.pipe(page("script.js", "text/javascript"));
+		.pipe(page("script.js", "text/javascript; charset=UTF-8"));
 }
 
 function images() {
 	return staticDir("images");
 }
 
-function page(path) {
+function page(path, type) {
 	var input = through(),
 		output = through();
 
 	input.pipe(concat(function(data) {
 		output.emit("data", {
 			path: path,
+			type: type,
 			content: data,
 		});
 		output.emit("end");

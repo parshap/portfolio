@@ -38,7 +38,7 @@ function gen(callback) {
 	var site = {};
 	generate()
 		.on("data", function(data) {
-			site[data.path] = data.content;
+			site[data.path] = data;
 		})
 		.on("end", callback.bind(null, null, site))
 		.on("error", callback);
@@ -52,17 +52,30 @@ function handle(req, res) {
 
 	limitedGen(function(err, site) {
 		if (err) {
-			res.statusCode = 500;
-			res.end("Error");
+			outputError(res, err);
 		}
 		else if (site[path]) {
-			res.end(site[path]);
+			outputPage(res, site[path]);
 		}
 		else {
-			res.statusCode = 404;
-			res.end("Not Found");
+			output404(res);
 		}
 	});
+}
+
+function outputPage(res, page) {
+	res.setHeader("Content-Type", page.type);
+	res.end(page.content);
+}
+
+function output404(res) {
+	res.statusCode = 404;
+	res.end("Not Found");
+}
+
+function outputError(res, err) {
+	res.statusCode = 500;
+	res.end("Error");
 }
 
 module.exports = connect()
