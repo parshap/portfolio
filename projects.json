@@ -10,16 +10,22 @@
 		]
 	},
 	{
-		"title": "Atlantic<br> Medical<br> Imaging",
-		"date": "2009",
-		"desc": "Content management system and corporate website for medical imaging company ",
-		"thumb": "ami-thumb.jpg"
+		"title": "Zelda<br> Madness",
+		"date": "2010",
+		"desc": "Fundraising website for video game marathon raising money for cancer research and treatment",
+		"thumb": "zelda-thumb.jpg"
 	},
 	{
 		"title": "Amber<br />Pollard",
 		"date": "2009\u20132010",
 		"desc": "E-commerce solution for luxury handbag designer",
 		"thumb": "amber-thumb.jpg"
+	},
+	{
+		"title": "Atlantic<br> Medical<br> Imaging",
+		"date": "2009",
+		"desc": "Content management system and corporate website for medical imaging company ",
+		"thumb": "ami-thumb.jpg"
 	},
 	{
 		"title": "Kali<br> Protectives<br> Team Riders",
