@@ -112,7 +112,7 @@ function lesss(p) {
 		optimization: 0,
 		compile: true,
 		compress: false,
-		dumpLineNumbers: "all",
+		dumpLineNumbers: "comments",
 	};
 	return source(p).pipe(map(compile));
 
