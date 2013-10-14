@@ -15,41 +15,33 @@ var fs = require("fs"),
 	mime = require("mime");
 
 module.exports = function() {
-	return combineStreams([
-		css(),
-		js(),
-		home(),
-		images(),
-	]).end();
+	var stream = combineStream();
+	stream.write(css());
+	stream.write(js());
+	stream.write(home());
+	stream.write(images());
+	stream.end();
+	return stream;
 };
 
 // Combine streams into single streams emitting all data events and a single
 // "end" event when all streams have ended
-function combineStreams(streams) {
-	var ended = false,
-		waiting = 0;
-	var stream = through(addStream, function() {
-		ended = true;
-		maybeEnd();
+function combineStream() {
+	var output = through();
+
+	// Lots of streams can be piped to output - remove listener warning
+	output.setMaxListeners(0);
+
+	var input = map(function(stream, callback) {
+		stream.pipe(output, { end: false });
+		stream.on("error", callback);
+		stream.on("end", callback);
 	});
-	streams && streams.forEach(addStream);
-	return stream;
 
-	function maybeEnd() {
-		if (ended && waiting === 0) {
-			stream.emit("end");
-		}
-	}
+	input.on("end", output.emit.bind(output, "end"));
+	input.on("error", output.emit.bind(output, "error"));
 
-	function addStream(s) {
-		waiting += 1;
-		s.on("data", stream.emit.bind(stream, "data"));
-		s.on("error", stream.emit.bind(stream, "error"));
-		s.on("end", function() {
-			waiting -= 1;
-			maybeEnd();
-		});
-	}
+	return duplexer(input, output);
 }
 
 // Like combineStream but preserve order of data events
@@ -164,7 +156,7 @@ function portfolio() {
 
 // Generate static file contained in given directory
 function staticDir(dirPath) {
-	var stream = combineStreams();
+	var stream = combineStream();
 
 	findit(dirPath)
 		.on("file", onFile)
