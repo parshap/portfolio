@@ -2,8 +2,8 @@
 	{
 		"title": "Hunter Wise<br> Trading<br> Platform",
 		"date": "2009\u20132012",
-		"desc": "Electronic trading platform for commodities trading firm, handling $1b in trade volume yearly",
-		"thumb": "trading-thumb.jpg",
+		"desc": "Electronic trading platform for commodities trading firm, handling $1b in trade volume yearly.",
+		"thumb": "trading-thumb.png",
 		"images": [
 			"trading-01.png",
 			"trading-02.png"
@@ -12,7 +12,7 @@
 	{
 		"title": "Zelda<br> Madness",
 		"date": "2010",
-		"desc": "Fundraising website for video game marathon raising money for cancer research and treatment",
+		"desc": "Fundraising website for video game marathon raising money for cancer research and treatment.",
 		"thumb": "zelda-thumb.jpg"
 	},
 	{
@@ -24,25 +24,25 @@
 	{
 		"title": "Atlantic<br> Medical<br> Imaging",
 		"date": "2009",
-		"desc": "Content management system and corporate website for medical imaging company ",
+		"desc": "Content management system and corporate website for medical imaging company.",
 		"thumb": "ami-thumb.jpg"
 	},
 	{
 		"title": "Kali<br> Protectives<br> Team Riders",
 		"date": "2009",
-		"desc": "Private social network showcasing sporting goods manufacturer's sponsored athletes",
+		"desc": "Private social network showcasing sporting goods manufacturer's sponsored athletes.",
 		"thumb": "kali-thumb.jpg"
 	},
 	{
 		"title": "Green Hills<br> Memorial<br> Park",
 		"date": "2008\u20132009",
-		"desc": "Content management system to connect customers with brand",
+		"desc": "Content management system to connect customers with brand.",
 		"thumb": "greenhills-thumb.jpg"
 	},
 	{
 		"title": "Nostrum Inc.",
 		"date": "2008",
-		"desc": "Website and blog for marketing and advertising firm",
-		"thumb": "nostrum-thumb.jpg"
+		"desc": "Website and blog for marketing and advertising firm.",
+		"thumb": "nostrum-thumb.png"
 	}
 ]
