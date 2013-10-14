@@ -7,13 +7,12 @@ var fs = require("fs"),
 	concat = require("concat-stream"),
 	map = require("map-stream"),
 	through = require("through"),
+	mapLimit = require("map-stream-limit"),
 	duplexer = require("duplexer"),
 	Hogan = require("hogan.js"),
 	less = require("less"),
 	findit = require("findit"),
 	mime = require("mime");
-
-var PROJECTS = require("./projects.json");
 
 module.exports = function() {
 	return combineStreams([
@@ -54,28 +53,19 @@ function combineStreams(streams) {
 }
 
 // Like combineStream but preserve order of data events
-function concatStreams(streams) {
-	var output = through(),
-		current = 0;
+function concatStream() {
+	var output = through();
 
-	step();
-	return output;
-
-	function process(stream) {
+	var input = mapLimit(function(stream, callback) {
 		stream.pipe(output, { end: false });
-		stream.on("end", function() {
-			step();
-		});
-	}
+		stream.on("error", callback);
+		stream.on("end", callback);
+	}, 1);
 
-	function step() {
-		if (current >= streams.length) {
-			return output.end();
-		}
+	input.on("end", output.emit.bind(output, "end"));
+	input.on("error", output.emit.bind(output, "error"));
 
-		process(streams[current]);
-		current += 1;
-	}
+	return duplexer(input, output);
 }
 
 // Create a domain with errors bound to the given stream
@@ -144,14 +134,22 @@ function lesss(p) {
 	}
 }
 
-function projects() {
-	var projects = PROJECTS.map(function(project, i) {
-		project.isLast = i === PROJECTS.length - 1;
-		return project;
+function json() {
+	return through(function(data) {
+		this.emit("data", JSON.parse(data));
 	});
-	return concatStreams(projects.map(function(project) {
-		return mustache("project.mustache", project);
-	}));
+}
+
+function projects() {
+	return source("./projects.json")
+		.pipe(json())
+		.pipe(through(function(projects) {
+			projects.forEach(this.emit.bind(this, "data"));
+		}))
+		.pipe(through(function(project) {
+			this.emit("data", mustache("project.mustache", project));
+		}))
+		.pipe(concatStream());
 }
 
 function portfolio() {
@@ -185,11 +183,11 @@ function staticDir(dirPath) {
 // -- Pages
 
 function home() {
-	var streams = [
-		mustache("intro.html"),
-		portfolio(),
-	];
-	return concatStreams(streams)
+	var stream = concatStream();
+	stream.write(mustache("intro.html"));
+	stream.write(portfolio());
+	stream.end();
+	return stream
 		.pipe(template("home"))
 		.pipe(page("index.html", "text/html"));
 }

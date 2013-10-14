@@ -12,7 +12,8 @@
     "less": "~1.4.2",
     "map-stream": "0.0.3",
     "mime": "~1.2.11",
-    "findit": "~1.1.0"
+    "findit": "~1.1.0",
+    "map-stream-limit": "1"
   },
   "devDependencies": {
     "tape": "~1.1.1"
