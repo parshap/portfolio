@@ -17,7 +17,6 @@ var fs = require("fs"),
 
 module.exports = function() {
 	var stream = combineStream();
-	stream.write(js());
 	stream.write(home());
 	stream.write(images());
 	stream.end();
@@ -72,20 +71,26 @@ function template(name) {
 	var input = through(),
 		output = through();
 
-	input.pipe(concat(function(data) {
+	// @TODO This control flow sucks
+	var scriptSource = source("script.js");
+	var script = scriptSource.pipe(concat());
+	var content = input.pipe(concat());
+
+	ender([input, scriptSource]).on("end", function() {
 		var firstPass = mustache("template.mustache", {
-			content: data,
+			content: content.getBody(),
 			name: name,
 		});
 		var css = lesss("style.less").pipe(eliminator(firstPass));
-		css.pipe(concat(function(styles) {
+		css.pipe(concat(function(style) {
 			mustache("template.mustache", {
-				content: data,
 				name: name,
-				styles: styles,
+				content: content.getBody(),
+				style: style,
+				script: script.getBody(),
 			}).pipe(output);
 		}));
-	}));
+	});
 
 	return duplexer(input, output);
 }
@@ -218,11 +223,6 @@ function eliminator(htmlStream) {
 		output.emit("end");
 	});
 	return duplexer(input, output);
-}
-
-function js() {
-	return source("script.js")
-		.pipe(page("script.js", "text/javascript; charset=UTF-8"));
 }
 
 function images() {
