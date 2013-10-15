@@ -1,6 +1,6 @@
 [
 	{
-		"title": "Music Organizer",
+		"title": "Music<br> Organizer",
 		"date": "2013",
 		"desc":" Tool to automatically organize your music collection",
 		"thumb": "mo-thumb.png",
@@ -33,6 +33,13 @@
 		"date": "2009",
 		"desc": "Content management system and corporate website for medical imaging company.",
 		"thumb": "ami-thumb.jpg"
+	},
+	{
+		"title": "Tides of the<br> Elements",
+		"date": "2009",
+		"desc": "Real-time multiplayer fantasy fighting game",
+		"thumb": "tote-thumb.jpg",
+		"link": "https://github.com/parshap/tote"
 	},
 	{
 		"title": "Kali<br> Protectives<br> Team Riders",
