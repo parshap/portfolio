@@ -1,4 +1,4 @@
-// jshint browser:true
+// jshint browser:true, globalstrict:true
 "use strict";
 
 // Non-jQuery port of https://github.com/davatron5000/FitText.js
@@ -23,15 +23,6 @@ function fitText(el, options) {
 	});
 }
 
-var q = document.querySelector.bind(document),
-	qa = document.querySelectorAll.bind(document);
-
-var html = q("html"),
-	btnPortfolio = q("#btn-portfolio");
+var q = document.querySelector.bind(document);
 
 fitText(q("#intro .heading"), { scale: 1.35 });
-
-btnPortfolio.addEventListener("click", function(e) {
-	html.className = "portfolio";
-	e.preventDefault();
-});
