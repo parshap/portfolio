@@ -17,7 +17,6 @@ var fs = require("fs"),
 
 module.exports = function() {
 	var stream = combineStream();
-	stream.write(css());
 	stream.write(js());
 	stream.write(home());
 	stream.write(images());
@@ -74,10 +73,18 @@ function template(name) {
 		output = through();
 
 	input.pipe(concat(function(data) {
-		mustache("template.mustache", {
+		var firstPass = mustache("template.mustache", {
 			content: data,
 			name: name,
-		}).pipe(output);
+		});
+		var css = lesss("style.less").pipe(eliminator(firstPass));
+		css.pipe(concat(function(styles) {
+			mustache("template.mustache", {
+				content: data,
+				name: name,
+				styles: styles,
+			}).pipe(output);
+		}));
 	}));
 
 	return duplexer(input, output);
@@ -211,12 +218,6 @@ function eliminator(htmlStream) {
 		output.emit("end");
 	});
 	return duplexer(input, output);
-}
-
-function css() {
-	return lesss("style.less")
-		.pipe(eliminator(homeHTML()))
-		.pipe(page("style.css", "text/css; charset=UTF-8"));
 }
 
 function js() {
