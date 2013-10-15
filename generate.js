@@ -1,6 +1,8 @@
 // jshint node:true
 "use strict";
 
+var ENV = process.env.NODE_ENV;
+
 var fs = require("fs"),
 	path = require("path"),
 	domain = require("domain").create,
@@ -117,14 +119,13 @@ function source(path) {
 	return stream;
 }
 
-var DEV = false;
 function lesss(p) {
 	var options = {
 		filename: p,
 		paths: [ path.dirname(p) ],
-		sourceMap: DEV,
-		compress: ! DEV,
-		dumpLineNumbers: DEV ? "comments" : false,
+		sourceMap: ENV !== "production",
+		compress: ENV === "production",
+		dumpLineNumbers: ENV === "production" ? false : "comments",
 	};
 	return source(p).pipe(map(compile));
 

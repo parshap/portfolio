@@ -1,6 +1,8 @@
 // jshint node:true
 "use strict";
 
+var REGEN = process.env.NODE_ENV !== "production";
+
 var connect = require("connect"),
 	generate = require("./generate");
 
@@ -23,7 +25,7 @@ var limitedGen = (function() {
 			callback(null, site);
 		}
 
-		var isExpired = Date.now() > (lastTime + TTL);
+		var isExpired = REGEN && Date.now() > (lastTime + TTL);
 
 		if ( ! site || isExpired) {
 			doGen(done);
@@ -79,5 +81,6 @@ function outputError(res, err) {
 }
 
 module.exports = connect()
+	.use(connect.logger("short"))
 	.use(handle)
 	.listen(process.env.PORT || 8080);
