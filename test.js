@@ -11,8 +11,7 @@ test("generate site", function(t) {
 			site[data.path] = true;
 		})
 		.on("end", function() {
-			t.ok(site["home"]);
-			t.ok(site["style.css"]);
+			t.ok(site["index.html"]);
 			t.end();
 		});
 });
