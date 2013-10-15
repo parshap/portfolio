@@ -165,7 +165,6 @@ function staticDir(dirPath) {
 	return stream;
 
 	function onFile(filePath) {
-		console.log(filePath);
 		var mimeType = mime.lookup(filePath);
 		stream.write(fs.createReadStream(filePath)
 			.pipe(page(filePath, mimeType)));
