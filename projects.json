@@ -2,7 +2,7 @@
 	{
 		"title": "Music<br> Organizer",
 		"date": "2013",
-		"desc":" Tool to automatically organize your music collection",
+		"desc":" Tool to automatically organize your music collection.",
 		"thumb": "mo-thumb.png",
 		"link": "https://github.com/parshap/music-organizer"
 	},
@@ -25,7 +25,7 @@
 	{
 		"title": "Amber<br />Pollard",
 		"date": "2009\u20132010",
-		"desc": "E-commerce solution for luxury handbag designer",
+		"desc": "E-commerce solution for luxury handbag designer.",
 		"thumb": "amber-thumb.jpg"
 	},
 	{
@@ -37,7 +37,7 @@
 	{
 		"title": "Tides of the<br> Elements",
 		"date": "2009",
-		"desc": "Real-time multiplayer fantasy fighting game",
+		"desc": "Real-time multiplayer fantasy fighting game.",
 		"thumb": "tote-thumb.jpg",
 		"link": "https://github.com/parshap/tote"
 	},
