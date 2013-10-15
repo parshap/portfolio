@@ -12,7 +12,8 @@ var fs = require("fs"),
 	Hogan = require("hogan.js"),
 	less = require("less"),
 	findit = require("findit"),
-	mime = require("mime");
+	mime = require("mime"),
+	eliminate = require("css-eliminator");
 
 module.exports = function() {
 	var stream = combineStream();
@@ -104,15 +105,14 @@ function source(path) {
 	return stream;
 }
 
+var DEV = false;
 function lesss(p) {
 	var options = {
 		filename: p,
 		paths: [ path.dirname(p) ],
-		sourceMap: true,
-		optimization: 0,
-		compile: true,
-		compress: false,
-		dumpLineNumbers: "comments",
+		sourceMap: DEV,
+		compress: ! DEV,
+		dumpLineNumbers: DEV ? "comments" : false,
 	};
 	return source(p).pipe(map(compile));
 
@@ -171,20 +171,51 @@ function staticDir(dirPath) {
 	}
 }
 
-// -- Pages
-
-function home() {
+function homeHTML() {
 	var stream = concatStream();
 	stream.write(mustache("intro.html"));
 	stream.write(portfolio());
 	stream.end();
-	return stream
-		.pipe(template("home"))
-		.pipe(page("index.html", "text/html; charset=UTF-8"));
+	return stream.pipe(template("home"));
+}
+
+
+function home() {
+	return homeHTML().pipe(page("index.html", "text/html; charset=UTF-8"));
+}
+
+function ender(streams) {
+	var output = through();
+	var waiting = streams.length;
+	streams.forEach(function(stream) {
+		stream.on("data", function() {});
+		stream.on("end", function() {
+			waiting -= 1;
+			if (waiting === 0) {
+				output.emit("end");
+			}
+		});
+	});
+	return output;
+}
+
+function eliminator(htmlStream) {
+	var input = through();
+	var output = through();
+	var html = htmlStream.pipe(concat());
+	var css = input.pipe(concat());
+	ender([htmlStream, input]).on("end", function() {
+		var cssString = css.getBody();
+		cssString = eliminate(cssString, html.getBody());
+		output.emit("data", cssString);
+		output.emit("end");
+	});
+	return duplexer(input, output);
 }
 
 function css() {
 	return lesss("style.less")
+		.pipe(eliminator(homeHTML()))
 		.pipe(page("style.css", "text/css; charset=UTF-8"));
 }
 
