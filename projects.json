@@ -1,5 +1,12 @@
 [
 	{
+		"title": "Music Organizer",
+		"date": "2013",
+		"desc":" Tool to automatically organize your music collection",
+		"thumb": "mo-thumb.png",
+		"link": "https://github.com/parshap/music-organizer"
+	},
+	{
 		"title": "Hunter Wise<br> Trading<br> Platform",
 		"date": "2009\u20132012",
 		"desc": "Electronic trading platform for commodities trading firm, handling $1b in trade volume yearly.",
