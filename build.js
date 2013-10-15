@@ -16,6 +16,6 @@ generate().on("data", function(data) {
 	var dirpath = getPath(path.dirname(data.path));
 	mkdirp(dirpath, function(err) {
 		if (err) throw err;
-		fs.writeFile(getPath(data.path), data);
+		fs.writeFile(getPath(data.path), data.content);
 	});
 });
