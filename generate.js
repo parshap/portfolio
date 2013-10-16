@@ -140,7 +140,7 @@ function template(context) {
 function script() {
 	var b = browserify().add("./script.js");
 
-	if (process.env.NODE_ENV !== "production") {
+	if (process.env.NODE_ENV === "production") {
 		b.transform(uglifyify);
 	}
 
