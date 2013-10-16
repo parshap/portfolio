@@ -37,6 +37,7 @@
 	#photo {
 		display: none;
 	}
+
 	.heading {
 		color: mix(@light, @dark, 20%);
 		font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -46,24 +47,15 @@
 	}
 
 	@media (min-width: @screen-sm) {
-		@dark: #fff;
-		@light: #ff8500;
 		font-size: 123%;
-
 		padding: 100px 0 80px 0;
-		background-color: @light;
-		color: mix(@light, @dark, 30%);
-
-		.heading {
-			color: mix(@light, @dark, 20%);
-		}
 
 		#photo {
+			border: 2px solid;
 			display: block;
 			float: right;
 			max-width: 180px;
-			margin: 0 0 20px 20px;
-			opacity: 0.75;
+			opacity: 0.9;
 		}
 	}
 }
