@@ -8,6 +8,7 @@ var fs = require("fs"),
 	domain = require("domain").create,
 	concat = require("concat-stream"),
 	map = require("map-stream"),
+	mapSync = require("event-stream").mapSync,
 	readArray = require("event-stream").readArray,
 	through = require("through"),
 	mapLimit = require("map-stream-limit"),
@@ -21,8 +22,8 @@ var fs = require("fs"),
 module.exports = function() {
 	return readArray([
 		homeHTML().pipe(page(
-			"index.html", "text/html; charset=UTF-8")),
-		staticDir("images"),
+			"me/index.html", "text/html; charset=UTF-8")),
+		finder("images").pipe(pager("me/"))
 	]).pipe(combiner());
 };
 
@@ -108,10 +109,13 @@ function mustache(path, data) {
 }
 
 function noop() {}
+function sink() {
+	return through(noop, noop);
+}
 
 // Stream that emits entire file content as a single data event
 function source(path) {
-	var stream = through(noop, noop);
+	var stream = sink();
 	var d = streamDomain(stream);
 	fs.readFile(path, "utf8", d.intercept(function(data) {
 		stream.emit("data", data);
@@ -169,20 +173,31 @@ function portfolio() {
 }
 
 // Generate static file contained in given directory
-function staticDir(dirPath) {
-	var stream = combiner();
+function finder(dirPath) {
+	var stream = sink();
 
 	findit(dirPath)
 		.on("file", onFile)
-		.on("end", stream.end.bind(stream));
+		.on("end", stream.emit.bind(stream, "end"));
 
 	return stream;
 
 	function onFile(filePath) {
-		var mimeType = mime.lookup(filePath);
-		stream.write(fs.createReadStream(filePath)
-			.pipe(page(filePath, mimeType)));
+		stream.emit("data", filePath);
 	}
+}
+
+// Files from a finder() to pages
+function pager(prefix) {
+	var output = combiner();
+	var input = mapSync(function(path) {
+		var type = mime.lookup(path);
+		console.log(prefix + path);
+		return fs.createReadStream(path)
+			.pipe(page(prefix + path, type));
+	});
+	input.pipe(output);
+	return duplexer(input, output);
 }
 
 function homeHTML() {
