@@ -17,7 +17,10 @@ var fs = require("fs"),
 	less = require("less"),
 	findit = require("findit"),
 	mime = require("mime"),
-	eliminate = require("css-eliminator");
+	eliminate = require("css-eliminator"),
+	browserify = require("browserify"),
+	uglifyify = require("uglifyify"),
+	buffer = require("stream-buffer");
 
 module.exports = function() {
 	return combineStreams([
@@ -124,18 +127,26 @@ function _template(context) {
 }
 
 function template(context) {
-	var input = through().pause();
+	var input = buffer();
 	var output = through();
+
 	script().pipe(concat(function(script) {
 		context.script = script;
-		input.pipe(_template(context)).pipe(output);
-		input.resume();
+		input.replay(_template(context)).pipe(output);
 	}));
 	return duplexer(input, output);
 }
 
 function script() {
-	return source("script.js");
+	var b = browserify().add("./script.js");
+
+	if (process.env.NODE_ENV !== "production") {
+		b.transform(uglifyify);
+	}
+
+	return b.bundle( {
+		debug: process.env.NODE_ENV !== "production",
+	});
 }
 
 function style(dom) {
