@@ -2,25 +2,32 @@
 
 day=$(expr 60 \* 60 \* 24)
 week=$(expr $day \* 7)
+docs=("index.html" "me/index.html" "error.html" "404.html")
+images=$(cd dist && find me/images -type f)
 
-# Gzip index.html
-gzip -c dist/me/index.html > dist/me/index.html.gz
+# Copy html documents
+for file in ${docs[*]}
+do
+	# Gzip file and save to a temp file
+	echo "Compressing $file (gzip)"
+	gzip -c dist/$file > dist/$file.gz
 
-# Copy index.html
-aws s3 cp dist/me/index.html.gz \
-	s3://www.parshap.com/me/index.html \
-	--region us-east-1 \
-	--acl public-read \
-	--content-type "text/html; charset=utf-8" \
-	--content-encoding gzip \
-	--cache-control "max-age=$day, public" \
-	--content-language en
+	# Copy file to S3
+	aws s3 cp dist/$file.gz \
+		s3://www.parshap.com/$file \
+		--region us-east-1 \
+		--acl public-read \
+		--content-type "text/html; charset=utf-8" \
+		--content-encoding gzip \
+		--cache-control "max-age=$day, public" \
+		--content-language en
 
-# Remove gzipped index.html
-rm dist/me/index.html.gz
+	# Remove gzip temp file
+	rm dist/$file.gz
+done
 
 # Copy images
-for file in $(cd dist && find me/images -type f)
+for file in $images
 do
 	aws s3 cp dist/$file \
 		s3://www.parshap.com/$file \

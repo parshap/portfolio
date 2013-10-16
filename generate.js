@@ -20,12 +20,48 @@ var fs = require("fs"),
 	eliminate = require("css-eliminator");
 
 module.exports = function() {
-	return readArray([
-		homeHTML().pipe(page(
-			"me/index.html", "text/html; charset=UTF-8")),
-		finder("images").pipe(pager("me/"))
-	]).pipe(combiner());
+	return combineStreams([
+		staticHTML("index"),
+		staticHTML("error"),
+		staticHTML("404"),
+		portfolio(),
+	]);
 };
+
+var TYPES = {
+	"html": "text/html; charset=UTF-8",
+};
+
+function staticHTML(name, src, dst) {
+	if ( ! src) src = name + ".html";
+	if ( ! dst ) dst = src;
+	return source(src)
+		.pipe(page(dst, TYPES.html));
+}
+
+function portfolio() {
+	return combineStreams([
+		portfolioHome(),
+		portfolioImages(),
+	]);
+}
+
+function portfolioHome() {
+	return portfolioHomeHTML().pipe(page(
+		"me/index.html", "text/html; charset=UTF-8"));
+}
+
+function portfolioImages() {
+	return finder("images").pipe(pager("me/"));
+}
+
+function combineStreams(streams) {
+	return readArray(streams).pipe(combiner());
+}
+
+function concatStreams(streams) {
+	return readArray(streams).pipe(concater());
+}
 
 // Combine streams into single streams emitting all data events and a single
 // "end" event when all streams have ended
@@ -70,33 +106,35 @@ function streamDomain(stream) {
 	return d;
 }
 
-// Put data piped into stream inside of template
-function template(name) {
-	var input = through(),
-		output = through();
-
-	// @TODO This control flow sucks
-	var scriptSource = source("script.js");
-	var script = scriptSource.pipe(concat());
-	var content = input.pipe(concat());
-
-	ender([input, scriptSource]).on("end", function() {
-		var firstPass = mustache("template.mustache", {
-			content: content.getBody(),
-			name: name,
-		});
-		var css = lesss("style.less").pipe(eliminator(firstPass));
-		css.pipe(concat(function(style) {
-			mustache("template.mustache", {
-				name: name,
-				content: content.getBody(),
-				style: style,
-				script: script.getBody(),
-			}).pipe(output);
+function template(context) {
+	var output = through();
+	var input = concat(function(input) {
+		context.content = input;
+		var firstPass = mustache("template.mustache", context);
+		style(firstPass).pipe(concat(function(style) {
+			context.style = style;
+			mustache("template.mustache", context).pipe(output);
 		}));
 	});
-
 	return duplexer(input, output);
+}
+
+function templateWithScript(context) {
+	var input = through();
+	var output = through();
+	script().pipe(concat(function(script) {
+		context.script = script;
+		input.pipe(template(context)).pipe(output);
+	}));
+	return duplexer(input, output);
+}
+
+function script() {
+	return source("script.js");
+}
+
+function style(dom) {
+	return lesss("style.less").pipe(eliminator(dom));
 }
 
 // Render the mustache template at the given path
@@ -162,7 +200,7 @@ function projects() {
 		.pipe(concater());
 }
 
-function portfolio() {
+function portfolioHTML() {
 	var out = through();
 	projects().pipe(concat(function(projects) {
 		mustache("portfolio.mustache", {
@@ -192,7 +230,6 @@ function pager(prefix) {
 	var output = combiner();
 	var input = mapSync(function(path) {
 		var type = mime.lookup(path);
-		console.log(prefix + path);
 		return fs.createReadStream(path)
 			.pipe(page(prefix + path, type));
 	});
@@ -200,12 +237,11 @@ function pager(prefix) {
 	return duplexer(input, output);
 }
 
-function homeHTML() {
-	var stream = concater();
-	stream.write(mustache("intro.html"));
-	stream.write(portfolio());
-	stream.end();
-	return stream.pipe(template("home"));
+function portfolioHomeHTML() {
+	return concatStreams([
+		mustache("intro.html"),
+		portfolioHTML(),
+	]).pipe(templateWithScript({ name: "home" }));
 }
 
 function ender(streams) {
