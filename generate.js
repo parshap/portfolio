@@ -21,22 +21,26 @@ var fs = require("fs"),
 
 module.exports = function() {
 	return combineStreams([
-		staticHTML("index"),
-		staticHTML("error"),
-		staticHTML("404"),
+		staticHTML("index.html"),
+		staticHTML("error.html"),
+		staticHTML("404.html"),
+		staticFile("robots.txt", TYPES.txt),
 		portfolio(),
 	]);
 };
 
 var TYPES = {
 	"html": "text/html; charset=UTF-8",
+	"txt": "text/plain",
 };
 
-function staticHTML(name, src, dst) {
-	if ( ! src) src = name + ".html";
+function staticFile(src, dst, type) {
 	if ( ! dst ) dst = src;
-	return source(src)
-		.pipe(page(dst, TYPES.html));
+	return source(src).pipe(page(dst, type));
+}
+
+function staticHTML(src, dst) {
+	return staticFile(src, dst, TYPES.html);
 }
 
 function portfolio() {
