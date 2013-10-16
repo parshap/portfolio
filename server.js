@@ -12,7 +12,6 @@ var limitedGen = (function() {
 	var site;
 
 	function doGen(callback) {
-		console.log("generating");
 		lastTime = Date.now();
 		gen(function(err, s) {
 			site = s;
@@ -37,9 +36,11 @@ var limitedGen = (function() {
 })();
 
 function gen(callback) {
+	console.log("Generating site");
 	var site = {};
 	generate()
 		.on("data", function(data) {
+			console.log(" >", data.path);
 			site[data.path] = data;
 		})
 		.on("end", callback.bind(null, null, site))
