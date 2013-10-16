@@ -8,6 +8,7 @@ var fs = require("fs"),
 	domain = require("domain").create,
 	concat = require("concat-stream"),
 	map = require("map-stream"),
+	readArray = require("event-stream").readArray,
 	through = require("through"),
 	mapLimit = require("map-stream-limit"),
 	duplexer = require("duplexer"),
@@ -18,16 +19,16 @@ var fs = require("fs"),
 	eliminate = require("css-eliminator");
 
 module.exports = function() {
-	var stream = combineStream();
-	stream.write(home());
-	stream.write(images());
-	stream.end();
-	return stream;
+	return readArray([
+		homeHTML().pipe(page(
+			"index.html", "text/html; charset=UTF-8")),
+		staticDir("images"),
+	]).pipe(combiner());
 };
 
 // Combine streams into single streams emitting all data events and a single
 // "end" event when all streams have ended
-function combineStream() {
+function combiner() {
 	var output = through();
 
 	// Lots of streams can be piped to output - remove listener warning
@@ -45,8 +46,8 @@ function combineStream() {
 	return duplexer(input, output);
 }
 
-// Like combineStream but preserve order of data events
-function concatStream() {
+// Like combiner but preserve order of data events
+function concater() {
 	var output = through();
 
 	var input = mapLimit(function(stream, callback) {
@@ -154,7 +155,7 @@ function projects() {
 		.pipe(through(function(project) {
 			this.emit("data", mustache("project.mustache", project));
 		}))
-		.pipe(concatStream());
+		.pipe(concater());
 }
 
 function portfolio() {
@@ -169,7 +170,7 @@ function portfolio() {
 
 // Generate static file contained in given directory
 function staticDir(dirPath) {
-	var stream = combineStream();
+	var stream = combiner();
 
 	findit(dirPath)
 		.on("file", onFile)
@@ -185,16 +186,11 @@ function staticDir(dirPath) {
 }
 
 function homeHTML() {
-	var stream = concatStream();
+	var stream = concater();
 	stream.write(mustache("intro.html"));
 	stream.write(portfolio());
 	stream.end();
 	return stream.pipe(template("home"));
-}
-
-
-function home() {
-	return homeHTML().pipe(page("index.html", "text/html; charset=UTF-8"));
 }
 
 function ender(streams) {
@@ -224,10 +220,6 @@ function eliminator(htmlStream) {
 		output.emit("end");
 	});
 	return duplexer(input, output);
-}
-
-function images() {
-	return staticDir("images");
 }
 
 function page(path, type) {
