@@ -34,13 +34,9 @@
 		max-width: 500px;
 	}
 
-	.parshap {
-		float: right;
-		max-width: 180px;
-		margin: 0 0 20px 20px;
-		opacity: 0.75;
+	#photo {
+		display: none;
 	}
-
 	.heading {
 		color: mix(@light, @dark, 20%);
 		font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -60,6 +56,14 @@
 
 		.heading {
 			color: mix(@light, @dark, 20%);
+		}
+
+		#photo {
+			display: block;
+			float: right;
+			max-width: 180px;
+			margin: 0 0 20px 20px;
+			opacity: 0.75;
 		}
 	}
 }
