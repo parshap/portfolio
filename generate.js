@@ -24,7 +24,7 @@ module.exports = function() {
 		staticHTML("index.html"),
 		staticHTML("error.html"),
 		staticHTML("404.html"),
-		staticFile("robots.txt", TYPES.txt),
+		staticFile("robots.txt", null, TYPES.txt),
 		portfolio(),
 	]);
 };
@@ -110,7 +110,7 @@ function streamDomain(stream) {
 	return d;
 }
 
-function template(context) {
+function _template(context) {
 	var output = through();
 	var input = concat(function(input) {
 		context.content = input;
@@ -123,12 +123,13 @@ function template(context) {
 	return duplexer(input, output);
 }
 
-function templateWithScript(context) {
-	var input = through();
+function template(context) {
+	var input = through().pause();
 	var output = through();
 	script().pipe(concat(function(script) {
 		context.script = script;
-		input.pipe(template(context)).pipe(output);
+		input.pipe(_template(context)).pipe(output);
+		input.resume();
 	}));
 	return duplexer(input, output);
 }
@@ -143,10 +144,8 @@ function style(dom) {
 
 // Render the mustache template at the given path
 function mustache(path, data) {
-	return source(path).pipe(through(function(src) {
-		var template = Hogan.compile(src),
-			html = template.render(data);
-		this.emit("data", html);
+	return source(path).pipe(mapSync(function(src) {
+		return Hogan.compile(src).render(data);
 	}));
 }
 
@@ -160,8 +159,8 @@ function source(path) {
 	var stream = sink();
 	var d = streamDomain(stream);
 	fs.readFile(path, "utf8", d.intercept(function(data) {
-		stream.emit("data", data);
-		stream.emit("end");
+		stream.queue(data);
+		stream.queue(null);
 	}));
 	return stream;
 }
@@ -243,9 +242,9 @@ function pager(prefix) {
 
 function portfolioHomeHTML() {
 	return concatStreams([
-		mustache("intro.html"),
+		source("intro.html"),
 		portfolioHTML(),
-	]).pipe(templateWithScript({ name: "home" }));
+	]).pipe(template({ name: "home" }));
 }
 
 function ender(streams) {
