@@ -1,115 +1,147 @@
 @import "./vendor/bootstrap/less/bootstrap.less";
 
 @grid-gutter-width: 20px;
+@thumb-width: 420px;
 
-@main-color: #111;
+.project-heading-type() {
+	font-family: "HelveticaNeueBlack",
+		"HelveticaNeue-Black",
+		"Helvetica Neue Black",
+		"HelveticaNeueBold",
+		"HelveticaNeue-Bold",
+		"Helvetica Neue Bold",
+		"TeXGyreHerosBold",
+		"HelveticaNeue",
+		"Helvetica Neue",
+		"Arial Black",
+		sans-serif;
+	font-weight: 800;
+	text-transform: uppercase;
+}
 
-#main {
-	@media (min-width: @screen-sm) {
-		max-width: 740px;
-	}
+.container {
+	max-width: 740px;
+}
+
+	@dark: #000;
+	@light: #fff;
+	@gray-darker:            lighten(@dark, 13.5%); // #222
+	@gray-dark:              lighten(@dark, 20%);   // #333
+	@gray:                   lighten(@dark, 33.5%); // #555
+	@gray-light:             lighten(@dark, 60%);   // #999
+	@gray-lighter:           lighten(@dark, 93.5%); // #eee
+	@body-bg: @light;
+	@text-color: @gray-dark;
+
+.inverse() {
+	@dark: #fff;
+	@light: #ff8500;
+	@gray-darker:            mix(@light, @dark, 13.5%); // #222
+	@gray-dark:              mix(@light, @dark, 20%);   // #333
+	@gray:                   mix(@light, @dark, 33.5%); // #555
+	@gray-light:             mix(@light, @dark, 60%);   // #999
+	@gray-lighter:           mix(@light, @dark, 93.5%); // #eee
+	@body-bg: @light;
+	@text-color: @gray-dark;
+
+	color: @text-color;
+	background-color: @body-bg;
 }
 
 #intro {
-	max-width: 600px;
+	.inverse();
+	.container {
+		padding-right: 140px;
+	}
+
+	padding: 20px 0 10px 0;
 
 	@media (min-width: 768px) and (min-height: 800px) {
-		margin-top: 140px;
+		padding: 100px 0 80px 0;
 	}
 
 	.heading {
-		color: @main-color;
 		font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-		border-bottom: 1px solid @text-color;
+		border-bottom: 1px solid;
 		margin: 0.4em 0;
 		padding: 0 0 0.1em 0;
 	}
 }
 
-#projects {
-	.list-unstyled;
-}
-
-@thumb-width: 420px;
-
-.project {
-	font-size: 120%;
-	color: #555;
-	margin: 140px 0;
-	.clearfix;
-	.make-row();
-
-	.title {
-		.make-sm-column(5);
-		font-family: "HelveticaNeueBlack",
-			"HelveticaNeue-Black",
-			"Helvetica Neue Black",
-			"HelveticaNeueBold",
-			"HelveticaNeue-Bold",
-			"Helvetica Neue Bold",
-			"TeXGyreHerosBold",
-			"HelveticaNeue",
-			"Helvetica Neue",
-			"Arial Black",
-			sans-serif;
-		font-weight: 800;
-		font-size: 190%;
-		text-transform: uppercase;
+#portfolio {
+	#projects {
+		.list-unstyled;
+		.container;
 	}
 
-	.thumb {
-		.make-sm-column(7);
-		img {
-			.img-responsive;
-			width: 100%;
-			max-width: @thumb-width;
-		}
-	}
+	.project {
+		font-size: 120%;
+		color: @gray;
+		margin: 140px 0;
 
-	.info {
-		.make-sm-column(5);
-		color: #777;
-		.date {
-			color: #555;
-			font-style: italic;
-		}
-	}
+		.clearfix;
+		.make-row();
 
-	@media (max-width: (@screen-sm - 1)) {
-		max-width: 500px;
-
-		@media (max-width: @thumb-width) {
-			.thumb {
-				padding: 0;
-			}
-		}
-
-		.info {
-			margin: 10px 0;
-
-			.date::after {
-				content: ".";
-			}
-		}
-	}
-
-	@media (min-width: @screen-sm) {
 		.title {
-			margin: 0 0 0.25em 0;
-			text-align: right;
+			.make-sm-column(5);
+			.project-heading-type();
+			font-size: 190%;
 		}
 
 		.thumb {
-			float: right;
+			.make-sm-column(7);
+			img {
+				.img-responsive;
+				width: 100%;
+				max-width: @thumb-width;
+			}
 		}
 
 		.info {
-			text-align: right;
-			.date, .desc {
-				display: block;
-			}
+			.make-sm-column(5);
+			color: mix(@light, @dark, 46.5);
 			.date {
+				color: @gray;
+				font-style: italic;
+			}
+		}
+
+		@media (max-width: (@screen-sm - 1)) {
+			max-width: 500px;
+
+			@media (max-width: @thumb-width) {
+				.thumb {
+					padding: 0;
+				}
+			}
+
+			.info {
+				margin: 10px 0;
+
+				.date::after {
+					content: ".";
+				}
+			}
+		}
+
+		@media (min-width: @screen-sm) {
+			.title {
 				margin: 0 0 0.25em 0;
+				text-align: right;
+			}
+
+			.thumb {
+				float: right;
+			}
+
+			.info {
+				text-align: right;
+				.date, .desc {
+					display: block;
+				}
+				.date {
+					margin: 0 0 0.25em 0;
+				}
 			}
 		}
 	}

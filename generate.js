@@ -113,7 +113,7 @@ function streamDomain(stream) {
 function _template(context) {
 	var output = through();
 	var input = concat(function(input) {
-		context.content = input;
+		context.body = input;
 		var firstPass = mustache("template.mustache", context);
 		style(firstPass).pipe(concat(function(style) {
 			context.style = style;
