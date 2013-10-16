@@ -2,8 +2,17 @@
 
 day=$(expr 60 \* 60 \* 24)
 week=$(expr $day \* 7)
+week=$(expr $day \* 365)
+
 docs=("index.html" "me/index.html" "error.html" "404.html")
 images=$(cd dist && find me/images -type f)
+
+# Copy robots.txt
+aws s3 cp dist/robots.txt \
+	s3://www.parshap.com/robots.txt \
+	--region us-east-1 \
+	--acl public-read \
+	--cache-control "max-age=$year, public" \
 
 # Copy html documents
 for file in ${docs[*]}
