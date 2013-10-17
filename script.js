@@ -49,10 +49,12 @@ animate((function() {
 
 	function drawImage(image) {
 		var context = canvas.getContext("2d");
-		context.fillStyle = palette.bg.hslString();
-		context.globalCompositeOperation = "source-over";
-		context.fillRect(0, 0, 400, 500);
-		context.globalCompositeOperation = "darken";
+		if ( ! isMobile()) {
+			context.fillStyle = palette.bg.hslString();
+			context.globalCompositeOperation = "source-over";
+			context.fillRect(0, 0, 400, 500);
+			context.globalCompositeOperation = "darken";
+		}
 		context.drawImage(image, 0,0);
 	}
 }()));
@@ -69,7 +71,7 @@ animate((function() {
 	};
 
 	return {
-		enabled: isMinWidth,
+		enabled: isColorEffectEnabled,
 
 		enable: function() {
 			setColors(colors.bg, colors.fg, colors.fgHeading, colors.bgBody);
@@ -105,7 +107,7 @@ animate((function() {
 	}
 
 	return {
-		enabled: isMinWidth,
+		enabled: isColorEffectEnabled,
 
 		enable: function() {
 			height = header.clientHeight;
@@ -168,6 +170,16 @@ function getTranslateString(px) {
 	return "translate3d(0, " + px + "px, 0)";
 }
 
+function isColorEffectEnabled() {
+	return isMinWidth() && ! isMobile();
+}
+
 function isMinWidth() {
 	return window.matchMedia("(min-width:768px)").matches;
+}
+
+var reMobile = /Android|BlackBerry|iPhone|iPad|iPod|IEMobile|Opera Mini|webOS/i;
+
+function isMobile() {
+	return reMobile.test(window.navigator.userAgent);
 }
