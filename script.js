@@ -7,114 +7,171 @@ var q = document.querySelector.bind(document);
 
 fitText(q("#intro .heading"), 1.4);
 
-(function() {
-	var color = require("color");
-	var ctx = q("#photo").getContext("2d");
-	var intro = q("#intro");
-	var introContainer = intro.querySelector(".container");
-	var projects = q("#portfolio");
-	var projectsContainer = projects.querySelector("#projects");
-	var startColor = randomColor();
-	var shouldDraw, height;
-	var lastScroll;
-	var fgcolor = color("#ffffff");
+var color = require("color"),
+	once = require("once");
 
-	intro.style.backgroundColor = ctx.fillStyle = startColor;
+var raf = window.requestAnimationFrame;
 
-	intro.style.color = color(startColor).mix(fgcolor, 0.7).hslString();
-	intro.querySelector(".heading").style.color =
-		color(startColor).mix(fgcolor, 0.8).hslString();
+// Base colors
+var COLORS = {
+	white: color("#fff"),
+	start: color("hsl(0, 30%, 75%)"),
+};
 
-	(function request() {
-		window.requestAnimationFrame(function() {
-			draw();
-			request();
-		});
-	})();
+// Vendor prefixed element.style property names
+var STYLES = {
+	transform: "webkitTransform",
+};
 
-	function randomColor() {
-		return color("hsl(0, 30%, 75%)")
-			.rotate(Math.random() * 360)
-			.hslString();
+var PHOTO_SRC = "images/parshap.jpg";
+
+var palette = generatePalette();
+var header = q("#intro"),
+	bodybg = q("#bg");
+
+// Draw canvas photo
+animate((function() {
+	var canvas = q("#photo");
+	return {
+		enabled: isMinWidth,
+
+		// Draw the image only once
+		enable: once(function() {
+			var image = new Image();
+			image.src = PHOTO_SRC;
+			image.onload = function() {
+				raf(function() {
+					drawImage(image);
+				});
+			};
+		}),
+	};
+
+	function drawImage(image) {
+		var context = canvas.getContext("2d");
+		context.fillStyle = palette.bg.hslString();
+		context.globalCompositeOperation = "source-over";
+		context.fillRect(0, 0, 400, 500);
+		context.globalCompositeOperation = "darken";
+		context.drawImage(image, 0,0);
+	}
+}()));
+
+// Set header colors
+animate((function() {
+	var heading = header.querySelector(".heading");
+
+	var colors = {
+		bg: palette.bg.hslString(),
+		fg: palette.fg.hslString(),
+		fgHeading: cloneColor(palette.fg).lighten(0.15).hslString(),
+		bgBody: cloneColor(palette.bg).rotate(90).hslString(),
+	};
+
+	return {
+		enabled: isMinWidth,
+
+		enable: function() {
+			setColors(colors.bg, colors.fg, colors.fgHeading, colors.bgBody);
+		},
+
+		disable: function() {
+			setColors("", "", "", "");
+		},
+	};
+
+	function setColors(bg, fg, fgHeading, bgBody) {
+		header.style.backgroundColor = bg;
+		header.style.color = fg;
+		heading.style.color = fgHeading;
+		bodybg.style.backgroundColor = bgBody;
+	}
+}()));
+
+// Animate fading
+animate((function() {
+	// DOM elements
+	var cHeader = header.querySelector(".container"),
+		projects = q("#projects");
+
+	var height, lastScroll;
+
+	function setStyles(k) {
+		var y = k * height * 0.15;
+		cHeader.style[STYLES.transform] = getTranslateString(-y);
+		header.style.opacity = 1 - k;
+		projects.style.opacity = (k * 0.5) + 0.5;
+		bodybg.style.opacity = 1 - k;
 	}
 
-	function draw() {
-		var isBig = matchMedia("(min-width:768px)").matches;
+	return {
+		enabled: isMinWidth,
 
-		if (isBig !== shouldDraw) {
-			shouldDraw = isBig;
-			if (shouldDraw) {
-				height = intro.clientHeight * 0.95;
+		enable: function() {
+			height = header.clientHeight;
+		},
+
+		disable: function() {
+			cHeader.style[STYLES.transform] = "";
+			header.style.opacity = "";
+			projects.style.opacity = "";
+			bodybg.style.opacity = "";
+		},
+
+		draw: function() {
+			var scroll = Math.min(window.scrollY / height, 1);
+
+			if (scroll !== lastScroll) {
+				setStyles(scroll);
+				lastScroll = scroll;
+			}
+		},
+	};
+}()));
+
+function cloneColor(c) {
+	return color().rgb(c.rgb());
+}
+
+function onFrame(fn) {
+	raf(function(t) {
+		fn(t);
+		onFrame(fn);
+	});
+}
+
+function animate(effect) {
+	var enabled = false;
+	onFrame(function(time) {
+		if ( ! effect.enabled || effect.enabled()) {
+			if ( ! enabled) {
+				if (effect.enable) effect.enable();
+				enabled = true;
+			}
+			if (effect.draw) effect.draw(time);
+		}
+		else {
+			if (enabled) {
+				if (effect.disable) effect.disable();
+				enabled = false;
 			}
 		}
+	});
+}
 
-		if ( ! shouldDraw) {
-			introContainer.style.webkitTransform = "";
-			intro.style.opacity = "";
-			projectsContainer.style.webkitTransform = "";
-			projects.style.opacity = "";
-			lastScroll = null;
-			return;
-		}
+function generatePalette() {
+	var deg = Math.random() * 360;
+	var base = cloneColor(COLORS.start).rotate(deg);
+	return {
+		bg: base,
+		fg: cloneColor(base).mix(color("#ccc"), 0.7),
+	};
+}
 
-		var scroll = Math.min(window.scrollY / height, 1);
+function getTranslateString(px) {
+	return "translate3d(0, " + px + "px, 0)";
+}
 
-		drawHeading(scroll);
-		drawProjects(scroll);
-		lastScroll = scroll;
-	}
-
-	function drawHeading(scroll) {
-		drawImage();
-
-		if (scroll !== lastScroll && scroll < 1) {
-			introContainer.style.webkitTransform =
-				"translate3d(0, -" + (scroll * height * 0.15) + "px, 0)";
-			intro.style.opacity = 1 - scroll;
-		}
-	}
-
-	var hasProjectsTranslate;
-	function drawProjects(scroll) {
-		if (scroll !== lastScroll && scroll < 1) {
-			hasProjectsTranslate = true;
-			projectsContainer.style.webkitTransform =
-				"translate3d(0, " + ((1 - scroll) * height * 0.15) + "px, 0)";
-			projects.style.opacity = scroll * 0.5 + 0.5;
-		}
-
-		if (scroll === 1 && hasProjectsTranslate) {
-			projectsContainer.style.webkitTransform = "";
-			projects.style.opacity = "";
-			hasProjectsTranslate = false;
-		}
-	}
-
-	var image, loaded;
-	function createImage() {
-		image = new Image();
-		image.src = "images/parshap.jpg";
-		image.onload = function() {
-			loaded = true;
-		};
-	}
-
-	var drawnImage;
-	function drawImage() {
-		if (drawnImage) {
-			return;
-		}
-
-		if ( ! image ) {
-			createImage();
-		}
-
-		if (loaded) {
-			ctx.globalCompositeOperation = "source-over";
-			ctx.fillRect(0, 0, 400, 500);
-			ctx.globalCompositeOperation = "darken";
-			ctx.drawImage(image, 0,0);
-			drawnImage = true;
-		}
-	}
-})();
+function isMinWidth() {
+	return window.matchMedia("(min-width:768px)").matches;
+}

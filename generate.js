@@ -141,11 +141,11 @@ function script() {
 	var b = browserify().add("./script.js");
 
 	if (process.env.NODE_ENV === "production") {
-		b.transform(uglifyify);
+		// b.transform(uglifyify);
 	}
 
 	return b.bundle( {
-		debug: process.env.NODE_ENV !== "production",
+		// debug: process.env.NODE_ENV !== "production",
 	});
 }
 

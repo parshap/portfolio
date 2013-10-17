@@ -3,6 +3,9 @@
 @grid-gutter-width: 20px;
 @thumb-width: 420px;
 
+@dark: #000;
+@light: #fff;
+
 .project-heading-type() {
 	font-family: "HelveticaNeueBlack",
 		"HelveticaNeue-Black",
@@ -19,16 +22,43 @@
 	text-transform: uppercase;
 }
 
+.selection(@fg, @bg) {
+	._selection() {
+		color: @fg;
+		background-color: @bg;
+	}
+
+	::-moz-selection { ._selection(); }
+	::selection { ._selection(); }
+}
+
 .container {
 	max-width: 740px;
 }
 
-@dark: #000;
-@light: #fff;
+.selection(#ccc, #333);
+
+#bg {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	left: 0;
+	top: 0;
+	z-index: -1;
+	// Force GPU layer
+	-webkit-transform: translateZ(0);
+}
 
 #intro {
 	font-size: 110%;
+	.selection(#333, #fff);
 	color: mix(@light, @dark, 30%);
+	// Force GPU layer
+	-webkit-transform: translateZ(0);
+
+	.container {
+		-webkit-transform: translateZ(0);
+	}
 
 	.text {
 		max-width: 500px;
@@ -41,7 +71,6 @@
 	.heading {
 		color: mix(@light, @dark, 20%);
 		font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-		border-bottom: 1px solid;
 		margin: 0 0 0.4em 0;
 		padding: 0 0 0.1em 0;
 	}
@@ -49,6 +78,14 @@
 	@media (min-width: @screen-sm) {
 		font-size: 123%;
 		padding: 100px 0 80px 0;
+
+		.text-wrapper {
+			background-color: #333;
+		}
+
+		p .text-wrapper {
+			padding: 0.2em 0;
+		}
 
 		#photo {
 			border: 2px solid;
@@ -64,6 +101,8 @@
 	#projects {
 		.list-unstyled;
 		.container;
+		// Force GPU layer
+		-webkit-transform: translateZ(0);
 	}
 
 	.project {
