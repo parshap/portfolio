@@ -20,7 +20,7 @@
     "stream-buffer": "",
     "browserify": "~2.34.1",
     "uglifyify": "~1.0.1",
-    "color": "~0.4.4",
+    "color": "git://github.com/parshap/color.git#clone-object",
     "once": "git://github.com/parshap/once.git#return-value"
   },
   "devDependencies": {

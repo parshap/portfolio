@@ -64,8 +64,8 @@ animate((function() {
 	var colors = {
 		bg: palette.bg.hslString(),
 		fg: palette.fg.hslString(),
-		fgHeading: cloneColor(palette.fg).lighten(0.15).hslString(),
-		bgBody: cloneColor(palette.bg).rotate(90).hslString(),
+		fgHeading: palette.fg.clone().lighten(0.15).hslString(),
+		bgBody: palette.bg.clone().rotate(90).hslString(),
 	};
 
 	return {
@@ -129,10 +129,6 @@ animate((function() {
 	};
 }()));
 
-function cloneColor(c) {
-	return color().rgb(c.rgb());
-}
-
 function onFrame(fn) {
 	raf(function(t) {
 		fn(t);
@@ -161,10 +157,10 @@ function animate(effect) {
 
 function generatePalette() {
 	var deg = Math.random() * 360;
-	var base = cloneColor(COLORS.start).rotate(deg);
+	var base = COLORS.start.clone().rotate(deg);
 	return {
 		bg: base,
-		fg: cloneColor(base).mix(color("#ccc"), 0.7),
+		fg: base.clone().mix(color("#ccc"), 0.7),
 	};
 }
 
