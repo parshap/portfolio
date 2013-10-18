@@ -112,6 +112,7 @@
 	}
 
 	.project {
+		max-width: 500px;
 		font-size: 120%;
 		color: @gray;
 		margin: 140px 0;
@@ -143,25 +144,23 @@
 			}
 		}
 
-		@media (max-width: (@screen-sm - 1)) {
-			max-width: 500px;
-
-			@media (max-width: @thumb-width) {
-				.thumb {
-					padding: 0;
-				}
+		@media (max-width: @thumb-width) {
+			.thumb {
+				padding: 0;
 			}
+		}
 
-			.info {
-				margin: 10px 0;
+		.info {
+			margin: 10px 0;
 
-				.date::after {
-					content: ".";
-				}
+			.date::after {
+				content: ".";
 			}
 		}
 
 		@media (min-width: @screen-sm) {
+			max-width: none;
+
 			.title {
 				margin: 0 0 0.25em 0;
 				text-align: right;
@@ -172,10 +171,17 @@
 			}
 
 			.info {
+				margin: 0;
 				text-align: right;
+
+				.date::after {
+					content: none;
+				}
+
 				.date, .desc {
 					display: block;
 				}
+
 				.date {
 					margin: 0 0 0.25em 0;
 				}
