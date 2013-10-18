@@ -35,7 +35,6 @@ var loadImage = (function() {
 	return function(callback) {
 		if (image && loaded) return callback(image);
 		if ( ! image) {
-			console.log("loading");
 			image = new Image();
 			image.src = PHOTO_SRC;
 		}
@@ -75,7 +74,6 @@ var drawImage = (function() {
 
 	function draw(image) {
 		var c = context();
-		console.log("drawing");
 		if (nextColor) {
 			c.fillStyle = nextColor;
 			c.globalCompositeOperation = "source-over";
@@ -131,7 +129,7 @@ animate((function() {
 		projects = q("#projects");
 
 	var height = cache(function() {
-		return header.clientHeight;
+		return header.clientHeight * 0.9;
 	});
 
 	var tween = tweener(function(k) {
@@ -199,9 +197,35 @@ function animate(effect) {
 	});
 }
 
+var MIN_COLOR_CHANGE = 60;
+
+function getSeedColor() {
+	var start = loadSeedColor() || COLORS.start,
+		deg = Math.random() * (360 - (2 * MIN_COLOR_CHANGE)),
+		seed = start.clone().rotate(deg + MIN_COLOR_CHANGE);
+	saveSeedColor(seed);
+	return seed;
+}
+
+function loadSeedColor() {
+	var lastColor = window.localStorage.lastColor;
+	if (color) {
+		try {
+			lastColor = JSON.parse(lastColor);
+		}
+		catch (e) {
+			return;
+		}
+		return color().hsl(lastColor);
+	}
+}
+
+function saveSeedColor(color) {
+	window.localStorage.lastColor = JSON.stringify(color.hsl());
+}
+
 function generateColors() {
-	var deg = Math.random() * 360,
-		seed = COLORS.start.clone().rotate(deg),
+	var seed = getSeedColor(),
 		fgBase = seed.clone().desaturate(0.5);
 
 	return mapObjectValues({
