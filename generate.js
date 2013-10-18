@@ -19,7 +19,7 @@ var fs = require("fs"),
 	mime = require("mime"),
 	eliminate = require("css-eliminator"),
 	browserify = require("browserify"),
-	uglifyify = require("uglifyify"),
+	uglify = require("uglify-js"),
 	buffer = require("stream-buffer");
 
 module.exports = function() {
@@ -137,16 +137,23 @@ function template(context) {
 	return duplexer(input, output);
 }
 
-function script() {
-	var b = browserify().add("./script.js");
-
-	if (process.env.NODE_ENV === "production") {
-		// b.transform(uglifyify);
+function compressor() {
+	if (process.env.NODE_ENV !== "production") {
+		return through();
 	}
-
-	return b.bundle( {
-		// debug: process.env.NODE_ENV !== "production",
+	return concat(function(code) {
+		var result = uglify.minify(code, {
+			fromString: true,
+		});
+		this.emit("data", result.code);
+		this.emit("end");
 	});
+}
+
+function script() {
+	return browserify("./script.js")
+		.bundle()
+		.pipe(compressor());
 }
 
 function style(dom) {
