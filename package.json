@@ -21,7 +21,7 @@
     "browserify": "~2.34.1",
     "uglifyify": "~1.0.1",
     "color": "git://github.com/parshap/color.git#clone-object",
-    "once": "git://github.com/parshap/once.git#return-value"
+    "prefixed": "0.0.0"
   },
   "devDependencies": {
     "tape": "~1.1.1"
