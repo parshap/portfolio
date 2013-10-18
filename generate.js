@@ -20,6 +20,7 @@ var fs = require("fs"),
 	eliminate = require("css-eliminator"),
 	browserify = require("browserify"),
 	uglify = require("uglify-js"),
+	cleanCSS = require("clean-css").process,
 	buffer = require("stream-buffer");
 
 module.exports = function() {
@@ -137,7 +138,34 @@ function template(context) {
 	return duplexer(input, output);
 }
 
-function compressor() {
+// Helper to create compressor stream creator functions
+function compressor(fn) {
+	return function() {
+		if (process.env.NODE_ENV !== "production") {
+			return through();
+		}
+		return concat(function(source) {
+			this.emit("data", fn(source));
+			this.emit("end");
+		});
+	};
+}
+
+var jscompressor = compressor(function(source) {
+	return uglify.minify(source, {
+		fromString: true,
+	}).code;
+});
+
+var csscompressor = compressor(function(source) {
+	return cleanCSS(source, {
+		keepSpecialComments: 0,
+		removeEmpty: true,
+		processImport: false,
+	});
+});
+
+function jscompressor() {
 	if (process.env.NODE_ENV !== "production") {
 		return through();
 	}
@@ -153,11 +181,11 @@ function compressor() {
 function script() {
 	return browserify("./script.js")
 		.bundle()
-		.pipe(compressor());
+		.pipe(jscompressor());
 }
 
 function style(dom) {
-	return lesss("style.less").pipe(eliminator(dom));
+	return lesss("style.less").pipe(eliminator(dom)).pipe(csscompressor());
 }
 
 // Render the mustache template at the given path
