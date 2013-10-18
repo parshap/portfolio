@@ -21,7 +21,6 @@
     "browserify": "~2.34.3",
     "prefixed": "0.0.0",
     "raf.js": "0.0.3",
-    "es5-shim": "~2.1.0",
     "uglify-js": "~2.4.0",
     "wolfy87-eventemitter": "~4.2.4"
   },
