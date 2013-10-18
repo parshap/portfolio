@@ -12,7 +12,7 @@ aws s3 cp dist/robots.txt \
 	s3://www.parshap.com/robots.txt \
 	--region us-east-1 \
 	--acl public-read \
-	--cache-control "max-age=$year, public" \
+	--cache-control "max-age=$year, public"
 
 # Copy html documents
 for file in ${docs[*]}
