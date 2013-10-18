@@ -36,7 +36,7 @@
 	max-width: 740px;
 }
 
-.selection(#ccc, #333);
+.selection(darken(@light, 20%), lighten(@dark, 20%));
 
 #bg {
 	position: fixed;
@@ -51,8 +51,7 @@
 
 #intro {
 	font-size: 110%;
-	.selection(#333, #fff);
-	color: mix(@light, @dark, 30%);
+	color: lighten(@dark, 30%);
 	// Force GPU layer
 	-webkit-transform: translateZ(0);
 
@@ -69,7 +68,7 @@
 	}
 
 	.heading {
-		color: mix(@light, @dark, 20%);
+		color: lighten(@dark, 20%);
 		font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 		margin: 0 0 0.4em 0;
 		padding: 0 0 0.1em 0;
@@ -78,14 +77,15 @@
 	@media (min-width: @screen-sm) {
 		font-size: 123%;
 		padding: 100px 0 80px 0;
-		color: mix(@light, @dark, 90%);
+		color: lighten(@dark, 90%);
+		.selection(lighten(@dark, 30%), @light);
 
 		.heading {
-			color: mix(@light, @dark, 95%);
+			color: lighten(@dark, 95%);
 		}
 
 		.text-wrapper {
-			background-color: #555;
+			background-color: lighten(@dark, 33%);
 		}
 
 		p .text-wrapper {
@@ -137,7 +137,7 @@
 
 		.info {
 			.make-sm-column(5);
-			color: mix(@light, @dark, 46.5);
+			color: lighten(@dark, 46.5%);
 			.date {
 				color: @gray;
 				font-style: italic;
