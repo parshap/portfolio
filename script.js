@@ -7,8 +7,7 @@ var q = document.querySelector.bind(document);
 
 fitText(q("#intro .heading"), 1.4);
 
-var color = require("color"),
-	once = require("once");
+var color = require("color");
 
 var raf = window.requestAnimationFrame;
 
@@ -25,7 +24,6 @@ var STYLES = {
 
 var PHOTO_SRC = "images/parshap.jpg";
 
-var palette = generatePalette();
 var header = q("#intro"),
 	bodybg = q("#bg");
 
@@ -67,16 +65,13 @@ var drawImage = (function() {
 			return;
 		}
 
-		eventuallyDrawImage();
-	};
-
-	function eventuallyDrawImage() {
+		// Load and draw it
 		loadImage(function(image) {
 			raf(function() {
 				draw(image);
 			});
 		});
-	}
+	};
 
 	function draw(image) {
 		var c = context();
@@ -178,16 +173,6 @@ animate((function() {
 	};
 }()));
 
-function generateColors() {
-	var palette = generatePalette();
-	return {
-		bg: palette.bg.hslString(),
-		fg: palette.fg.hslString(),
-		fgHeading: palette.fg.clone().lighten(0.15).hslString(),
-		bgBody: palette.bg.clone().rotate(90).hslString(),
-	};
-}
-
 function onFrame(fn) {
 	raf(function(t) {
 		fn(t);
@@ -214,13 +199,26 @@ function animate(effect) {
 	});
 }
 
-function generatePalette() {
-	var deg = Math.random() * 360;
-	var base = COLORS.start.clone().rotate(deg);
-	return {
-		bg: base,
-		fg: base.clone().mix(color("#ccc"), 0.7),
-	};
+function generateColors() {
+	var deg = Math.random() * 360,
+		seed = COLORS.start.clone().rotate(deg),
+		fgBase = seed.clone().desaturate(0.5);
+
+	return mapObjectValues({
+		bg: seed,
+		fg: fgBase.clone().lighten(0.2),
+		fgHeading: fgBase.clone().lighten(0.267),
+		bgBody: seed.clone().rotate(90),
+	}, function(value) {
+		return value.hslString();
+	});
+}
+
+function mapObjectValues(obj, fn) {
+	return Object.keys(obj).reduce(function(acc, cur) {
+		acc[cur] = fn(obj[cur], cur, obj);
+		return acc;
+	}, {});
 }
 
 function getTranslateString(px) {

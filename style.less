@@ -52,7 +52,7 @@
 #intro {
 	font-size: 110%;
 	.selection(#333, #fff);
-	color: mix(@light, @dark, 70%);
+	color: mix(@light, @dark, 30%);
 	// Force GPU layer
 	-webkit-transform: translateZ(0);
 
@@ -69,7 +69,7 @@
 	}
 
 	.heading {
-		color: mix(@light, @dark, 80%);
+		color: mix(@light, @dark, 20%);
 		font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 		margin: 0 0 0.4em 0;
 		padding: 0 0 0.1em 0;
@@ -78,9 +78,14 @@
 	@media (min-width: @screen-sm) {
 		font-size: 123%;
 		padding: 100px 0 80px 0;
+		color: mix(@light, @dark, 90%);
+
+		.heading {
+			color: mix(@light, @dark, 95%);
+		}
 
 		.text-wrapper {
-			background-color: #333;
+			background-color: #555;
 		}
 
 		p .text-wrapper {
