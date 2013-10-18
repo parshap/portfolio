@@ -21,7 +21,8 @@
     "browserify": "~2.34.1",
     "uglifyify": "~1.0.1",
     "prefixed": "0.0.0",
-    "raf.js": "0.0.3"
+    "raf.js": "0.0.3",
+    "es5-shim": "~2.1.0"
   },
   "devDependencies": {
     "tape": "~1.1.1"

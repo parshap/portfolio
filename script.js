@@ -1,6 +1,9 @@
 // jshint browser:true, node:true
 "use strict";
 
+// Shim ES5 support
+require("es5-shim");
+
 var fitText = require("./lib/fittext"),
 	effects = require("./lib/effects");
 
