@@ -14,7 +14,7 @@ var raf = window.requestAnimationFrame;
 // Base colors
 var COLORS = {
 	white: color("#fff"),
-	start: color("hsl(0, 30%, 75%)"),
+	start: color("hsl(0, 35%, 75%)"),
 };
 
 // Vendor prefixed element.style property names
