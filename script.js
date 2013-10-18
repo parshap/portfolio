@@ -29,57 +29,89 @@ var palette = generatePalette();
 var header = q("#intro"),
 	bodybg = q("#bg");
 
+// Load the image once and then always return the same value
+// If this function is called multiple time while the image is still loading
+// Only the last callback will ever be called
+var loadImage = (function() {
+	var image, loaded;
+	return function(callback) {
+		if (image && loaded) return callback(image);
+		if ( ! image) {
+			console.log("loading");
+			image = new Image();
+			image.src = PHOTO_SRC;
+		}
+		// This overrides any previous callback waiting to load
+		image.onload = function() {
+			loaded = true;
+			callback(image);
+		};
+	};
+}());
+
+var drawImage = (function() {
+	var canvas = q("#photo");
+	var lastColor = -1, nextColor;
+
+	var context = cache(function() {
+		return canvas.getContext("2d");
+	});
+
+	return function(color) {
+		if (color) {
+			nextColor = color;
+		}
+
+		// Don't do anything if the image is already drawn in this color
+		if (nextColor === lastColor) {
+			return;
+		}
+
+		eventuallyDrawImage();
+	};
+
+	function eventuallyDrawImage() {
+		loadImage(function(image) {
+			raf(function() {
+				draw(image);
+			});
+		});
+	}
+
+	function draw(image) {
+		var c = context();
+		console.log("drawing");
+		if (nextColor) {
+			c.fillStyle = nextColor;
+			c.globalCompositeOperation = "source-over";
+			c.fillRect(0, 0, 400, 500);
+			c.globalCompositeOperation = "darken";
+		}
+		c.drawImage(image, 0,0);
+		lastColor = nextColor;
+	}
+}());
+
 // Draw canvas photo
 animate((function() {
-	var canvas = q("#photo");
 	return {
 		enabled: isMinWidth,
-
-		// Draw the image only once
-		enable: once(function() {
-			var image = new Image();
-			image.src = PHOTO_SRC;
-			image.onload = function() {
-				raf(function() {
-					drawImage(image);
-				});
-			};
-		}),
+		enable: drawImage,
 	};
-
-	function drawImage(image) {
-		var context = canvas.getContext("2d");
-		if ( ! isMobile()) {
-			context.fillStyle = palette.bg.hslString();
-			context.globalCompositeOperation = "source-over";
-			context.fillRect(0, 0, 400, 500);
-			context.globalCompositeOperation = "darken";
-		}
-		context.drawImage(image, 0,0);
-	}
 }()));
 
-// Set header colors
-animate((function() {
+var colors = (function() {
 	var heading = header.querySelector(".heading");
 
-	var colors = {
-		bg: palette.bg.hslString(),
-		fg: palette.fg.hslString(),
-		fgHeading: palette.fg.clone().lighten(0.15).hslString(),
-		bgBody: palette.bg.clone().rotate(90).hslString(),
-	};
-
 	return {
-		enabled: isColorEffectEnabled,
-
-		enable: function() {
+		set: function() {
+			var colors = generateColors();
 			setColors(colors.bg, colors.fg, colors.fgHeading, colors.bgBody);
+			drawImage(colors.bg);
 		},
-
-		disable: function() {
+		unset: function() {
 			setColors("", "", "", "");
-		},
+		}
 	};
 
 	function setColors(bg, fg, fgHeading, bgBody) {
@@ -88,7 +120,14 @@ animate((function() {
 		heading.style.color = fgHeading;
 		bodybg.style.backgroundColor = bgBody;
 	}
-}()));
+}());
+
+// Set header colors
+animate({
+	enabled: isColorEffectEnabled,
+	enable: colors.set,
+	disable: colors.unset,
+});
 
 // Animate fading
 animate((function() {
@@ -96,40 +135,58 @@ animate((function() {
 	var cHeader = header.querySelector(".container"),
 		projects = q("#projects");
 
-	var height, lastScroll;
+	var height = cache(function() {
+		return header.clientHeight;
+	});
 
-	function setStyles(k) {
-		var y = k * height * 0.15;
-		cHeader.style[STYLES.transform] = getTranslateString(-y);
-		header.style.opacity = 1 - k;
-		projects.style.opacity = (k * 0.5) + 0.5;
-		bodybg.style.opacity = 1 - k;
+	var tween = tweener(function(k) {
+		// Change colors every time all colors are faded out completely
+		if (k === 1) {
+			colors.set();
+		}
+
+		var headerTranslate = getTranslateString(k * height() * -0.15),
+			headerOpacity = 1 - k,
+			projectsOpacity = (k * 0.7) + 0.3,
+			bgOpacity = 1 - k;
+		setStyles(headerTranslate, headerOpacity, projectsOpacity, bgOpacity);
+	});
+
+	function setStyles() {
+		cHeader.style[STYLES.transform] = arguments[0];
+		header.style.opacity = arguments[1];
+		projects.style.opacity = arguments[2];
+		bodybg.style.opacity = arguments[3];
 	}
 
 	return {
 		enabled: isColorEffectEnabled,
 
 		enable: function() {
-			height = header.clientHeight;
+			height.update();
 		},
 
 		disable: function() {
-			cHeader.style[STYLES.transform] = "";
-			header.style.opacity = "";
-			projects.style.opacity = "";
-			bodybg.style.opacity = "";
+			setStyles("", "", "", "");
 		},
 
 		draw: function() {
-			var scroll = Math.min(window.scrollY / height, 1);
-
-			if (scroll !== lastScroll) {
-				setStyles(scroll);
-				lastScroll = scroll;
-			}
+			var k = window.scrollY / height();
+			k = Math.min(1, k);
+			tween(k);
 		},
 	};
 }()));
+
+function generateColors() {
+	var palette = generatePalette();
+	return {
+		bg: palette.bg.hslString(),
+		fg: palette.fg.hslString(),
+		fgHeading: palette.fg.clone().lighten(0.15).hslString(),
+		bgBody: palette.bg.clone().rotate(90).hslString(),
+	};
+}
 
 function onFrame(fn) {
 	raf(function(t) {
@@ -182,4 +239,25 @@ var reMobile = /Android|BlackBerry|iPhone|iPad|iPod|IEMobile|Opera Mini|webOS/i;
 
 function isMobile() {
 	return reMobile.test(window.navigator.userAgent);
+}
+
+function tweener(fn) {
+	var lastVal;
+	return function(val) {
+		if (val !== lastVal) {
+			fn(val);
+			lastVal = val;
+		}
+	};
+}
+
+function cache(fn) {
+	var called, val;
+	function fetch() {
+		return called ? val : fetch.update();
+	}
+	fetch.update = function() {
+		return val = fn();
+	};
+	return fetch;
 }
