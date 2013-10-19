@@ -21,7 +21,8 @@ var fs = require("fs"),
 	browserify = require("browserify"),
 	uglify = require("uglify-js"),
 	cleanCSS = require("clean-css").process,
-	buffer = require("stream-buffer");
+	buffer = require("stream-buffer"),
+	_ = require("lodash");
 
 module.exports = function() {
 	return combineStreams([
@@ -195,6 +196,28 @@ function mustache(path, data) {
 	}));
 }
 
+function mustachestreams(path, data, streams) {
+	var output = through();
+	streamsFinisher(streams, function(streamsData) {
+		mustache(path, _.extend(data, streamsData)).pipe(output);
+	});
+	return output;
+}
+
+function streamsFinisher(streams, callback) {
+	var data = {};
+
+	_.each(streams, function(stream, key) {
+		stream.pipe(concat(function(val) {
+			data[key] = val;
+		}));
+	});
+
+	ender(_.toArray(streams)).on("end", function() {
+		callback(data);
+	});
+}
+
 function noop() {}
 function sink() {
 	return through(noop, noop);
@@ -237,16 +260,29 @@ function json() {
 	});
 }
 
+// Through stream that unwraps arrays
+function unwrapper() {
+	return through(function(array) {
+		array.forEach(this.emit.bind(this, "data"));
+	});
+}
+
 function projects() {
 	return source("./projects.json")
 		.pipe(json())
-		.pipe(through(function(projects) {
-			projects.forEach(this.emit.bind(this, "data"));
-		}))
-		.pipe(through(function(project) {
-			this.emit("data", mustache("project.mustache", project));
-		}))
+		.pipe(unwrapper())
+		.pipe(mapSync(renderProject))
 		.pipe(concater());
+}
+
+function renderProject(project) {
+	var image = project.image ?
+		mustache("image-link.mustache", project) :
+		mustache("image.mustache", project);
+
+	return mustachestreams("project.mustache", project, {
+		image: image,
+	});
 }
 
 function portfolioHTML() {
