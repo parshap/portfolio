@@ -26,10 +26,10 @@ var fs = require("fs"),
 
 module.exports = function() {
 	return combineStreams([
-		staticHTML("index.html"),
-		staticHTML("error.html"),
-		staticHTML("404.html"),
-		staticFile("robots.txt", null, TYPES.txt),
+		staticHTML("templates/index.html"),
+		staticHTML("templates/error.html"),
+		staticHTML("templates/404.html"),
+		staticFile("templates/robots.txt", null, TYPES.txt),
 		portfolio(),
 	]);
 };
@@ -119,10 +119,10 @@ function _template(context) {
 	var output = through();
 	var input = concat(function(input) {
 		context.body = input;
-		var firstPass = mustache("template.mustache", context);
+		var firstPass = mustache("templates/template.mustache", context);
 		style(firstPass).pipe(concat(function(style) {
 			context.style = style;
-			mustache("template.mustache", context).pipe(output);
+			mustache("templates/template.mustache", context).pipe(output);
 		}));
 	});
 	return duplexer(input, output);
@@ -277,10 +277,10 @@ function projects() {
 
 function renderProject(project) {
 	var image = project.image ?
-		mustache("image-link.mustache", project) :
-		mustache("image.mustache", project);
+		mustache("templates/image-link.mustache", project) :
+		mustache("templates/image.mustache", project);
 
-	return mustachestreams("project.mustache", project, {
+	return mustachestreams("templates/project.mustache", project, {
 		image: image,
 	});
 }
@@ -288,7 +288,7 @@ function renderProject(project) {
 function portfolioHTML() {
 	var out = through();
 	projects().pipe(concat(function(projects) {
-		mustache("portfolio.mustache", {
+		mustache("templates/portfolio.mustache", {
 			projects: projects,
 		}).pipe(out);
 	}));
@@ -324,7 +324,7 @@ function pager(prefix) {
 
 function portfolioHomeHTML() {
 	return concatStreams([
-		source("intro.html"),
+		source("templates/intro.html"),
 		portfolioHTML(),
 	]).pipe(template({ name: "home" }));
 }
