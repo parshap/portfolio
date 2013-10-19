@@ -126,9 +126,10 @@
 			font-size: 190%;
 		}
 
-		.thumb {
+		.image {
+			display: block;
 			.make-sm-column(7);
-			img {
+			.thumb {
 				.img-responsive;
 				width: 100%;
 				max-width: @thumb-width;
@@ -145,7 +146,7 @@
 		}
 
 		@media (max-width: @thumb-width) {
-			.thumb {
+			.image {
 				padding: 0;
 			}
 		}
@@ -166,7 +167,7 @@
 				text-align: right;
 			}
 
-			.thumb {
+			.image {
 				float: right;
 			}
 
