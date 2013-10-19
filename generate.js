@@ -21,7 +21,6 @@ var fs = require("fs"),
 	browserify = require("browserify"),
 	uglify = require("uglify-js"),
 	cleanCSS = require("clean-css").process,
-	buffer = require("stream-buffer"),
 	_ = require("lodash");
 
 module.exports = function() {
@@ -115,28 +114,24 @@ function streamDomain(stream) {
 	return d;
 }
 
-function _template(context) {
+function _template(context, streams) {
 	var output = through();
-	var input = concat(function(input) {
-		context.body = input;
-		var firstPass = mustache("templates/template.mustache", context);
-		style(firstPass).pipe(concat(function(style) {
-			context.style = style;
-			mustache("templates/template.mustache", context).pipe(output);
-		}));
-	});
+	var input = through();
+
+	streams.body = input;
+	var firstPass = mustachestreams("templates/template.mustache", context, streams);
+	style(firstPass).pipe(concat(function(style) {
+		context.style = style;
+		mustache("templates/template.mustache", context).pipe(output);
+	}));
 	return duplexer(input, output);
 }
 
 function template(context) {
-	var input = buffer();
-	var output = through();
-
-	script().pipe(concat(function(script) {
-		context.script = script;
-		input.replay(_template(context)).pipe(output);
-	}));
-	return duplexer(input, output);
+	return _template(context, {
+		zoom: source("zoom-icon-def.svg"),
+		script: script(),
+	});
 }
 
 // Helper to create compressor stream creator functions
@@ -276,12 +271,14 @@ function projects() {
 }
 
 function renderProject(project) {
-	var image = project.image ?
-		mustache("templates/image-link.mustache", project) :
-		mustache("templates/image.mustache", project);
+	var template = project.image ?
+		"templates/image-link.mustache" :
+		"templates/image.mustache";
 
 	return mustachestreams("templates/project.mustache", project, {
-		image: image,
+		image: mustachestreams(template, project, {
+			zoom: source("zoom-icon-ref.svg"),
+		}),
 	});
 }
 
