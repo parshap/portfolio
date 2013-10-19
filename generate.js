@@ -180,7 +180,7 @@ function jscompressor() {
 }
 
 function script() {
-	return browserify("./script.js")
+	return browserify("./client.js")
 		.bundle()
 		.pipe(jscompressor());
 }
