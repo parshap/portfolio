@@ -261,16 +261,16 @@ function json() {
 }
 
 // Through stream that unwraps arrays
-function unwrapper() {
-	return through(function(array) {
-		array.forEach(this.emit.bind(this, "data"));
+function unwrapper(prop) {
+	return through(function(data) {
+		data[prop].forEach(this.emit.bind(this, "data"));
 	});
 }
 
 function projects() {
-	return source("./projects.json")
+	return source("./data.json")
 		.pipe(json())
-		.pipe(unwrapper())
+		.pipe(unwrapper("projects"))
 		.pipe(mapSync(renderProject))
 		.pipe(concater());
 }
