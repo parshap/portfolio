@@ -14,6 +14,7 @@ fitText(q("#intro .heading"), 1.4);
 
 effects({
 	header: id("intro"),
+	projects: id("projects"),
 	bodybg: id("bg"),
 	photo: id("photo"),
 });

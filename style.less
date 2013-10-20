@@ -119,19 +119,17 @@
 	display: none;
 }
 
-#portfolio {
-	#projects {
-		padding-top: @section-spacing;
-		.list-unstyled;
-		.container;
-		// Force GPU layer
-		.force-layer();
-	}
+#projects {
+	color: @gray;
+	padding-top: @section-spacing;
+	.list-unstyled;
+	.container;
+	// Force GPU layer
+	.force-layer();
 
 	.project {
 		max-width: 500px;
 		font-size: 120%;
-		color: @gray;
 		margin-bottom: @section-spacing;
 
 		.clearfix;
@@ -175,9 +173,10 @@
 
 		.info {
 			.make-sm-column(5);
-			color: lighten(@dark, 46.5%);
+			.desc {
+				color: lighten(@dark, 46.5%);
+			}
 			.date {
-				color: @gray;
 				font-style: italic;
 			}
 		}
