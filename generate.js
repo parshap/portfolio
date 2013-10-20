@@ -271,12 +271,8 @@ function projects() {
 }
 
 function renderProject(project) {
-	var template = project.image ?
-		"templates/image-link.mustache" :
-		"templates/image.mustache";
-
 	return mustachestreams("templates/project.mustache", project, {
-		image: mustachestreams(template, project, {
+		image: mustachestreams("templates/image.mustache", project, {
 			zoom: source("zoom-icon-ref.svg"),
 		}),
 	});
