@@ -10,6 +10,7 @@ var fs = require("fs"),
 	map = require("map-stream"),
 	mapSync = require("event-stream").mapSync,
 	readArray = require("event-stream").readArray,
+	pipeline = require("event-stream").pipeline,
 	through = require("through"),
 	mapLimit = require("map-stream-limit"),
 	duplexer = require("duplexer"),
@@ -17,10 +18,10 @@ var fs = require("fs"),
 	less = require("less"),
 	findit = require("findit"),
 	mime = require("mime"),
+	css = require("css"),
 	eliminate = require("css-eliminator"),
 	browserify = require("browserify"),
 	uglify = require("uglify-js"),
-	cleanCSS = require("clean-css").process,
 	_ = require("lodash");
 
 module.exports = function() {
@@ -148,30 +149,26 @@ function compressor(fn) {
 }
 
 var jscompressor = compressor(function(source) {
-	return uglify.minify(source, {
+	console.time("uglify");
+	var code = uglify.minify(source, {
 		fromString: true,
 	}).code;
+	console.timeEnd("uglify");
+	return code;
 });
 
-var csscompressor = compressor(function(source) {
-	return cleanCSS(source, {
-		keepSpecialComments: 0,
-		removeEmpty: true,
-		processImport: false,
-	});
-});
-
-function jscompressor() {
-	if (process.env.NODE_ENV !== "production") {
-		return through();
-	}
-	return concat(function(code) {
-		var result = uglify.minify(code, {
-			fromString: true,
-		});
-		this.emit("data", result.code);
-		this.emit("end");
-	});
+function csscompressor(dom) {
+	return pipeline(
+		eliminator(dom),
+		mapSync(function(data) {
+			console.time("css-stringify");
+			var code = css.stringify(data, {
+				compress: process.env.NODE_ENV === "production",
+			});
+			console.timeEnd("css-stringify");
+			return code;
+		})
+	);
 }
 
 function script() {
@@ -181,7 +178,7 @@ function script() {
 }
 
 function style(dom) {
-	return lesss("style.less").pipe(eliminator(dom)).pipe(csscompressor());
+	return lesss("style.less").pipe(csscompressor(dom));
 }
 
 // Render the mustache template at the given path
@@ -237,10 +234,13 @@ function lesss(p) {
 		compress: ENV === "production",
 		dumpLineNumbers: ENV === "production" ? false : "comments",
 	};
-	return source(p).pipe(map(compile));
+	var code = source(p).pipe(map(compile));
+	return code;
 
 	function compile(src, callback) {
+		console.time("less");
 		less.render(src, options, function(err, css) {
+			console.timeEnd("less");
 			if (err) {
 				err.message = less.formatError(err);
 			}
@@ -341,10 +341,15 @@ function eliminator(htmlStream) {
 	var input = through();
 	var output = through();
 	var html = htmlStream.pipe(concat());
-	var css = input.pipe(concat());
+	var source = input.pipe(concat());
 	ender([htmlStream, input]).on("end", function() {
-		var cssString = css.getBody();
+		var cssString = source.getBody();
+		console.time("css-parse");
+		cssString = css.parse(cssString);
+		console.timeEnd("css-parse");
+		console.time("css-eliminator");
 		cssString = eliminate(cssString, html.getBody());
+		console.timeEnd("css-eliminator");
 		output.emit("data", cssString);
 		output.emit("end");
 	});
