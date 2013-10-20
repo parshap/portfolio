@@ -1,6 +1,13 @@
 {
 	"projects": [
 		{
+			"title": "FlikStak",
+			"date": "2012\u20132013",
+			"desc": "Social network to oragnize and share ideas",
+			"thumb": "flikstak-thumb.jpg",
+			"image": "flikstak.jpg"
+		},
+		{
 			"title": "Music<br> Organizer",
 			"date": "2013",
 			"desc":" Tool to automatically organize your music collection.",
