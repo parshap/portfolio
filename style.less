@@ -2,6 +2,7 @@
 
 @grid-gutter-width: 20px;
 @thumb-width: 420px;
+@section-spacing: 80px;
 
 @dark: #000;
 @light: #fff;
@@ -69,6 +70,9 @@
 
 	.text {
 		max-width: 500px;
+		p {
+			margin: 0;
+		}
 	}
 
 	#photo {
@@ -84,7 +88,7 @@
 
 	@media (min-width: @screen-sm) {
 		font-size: 123%;
-		padding: 100px 0 80px 0;
+		padding: 100px 0 @section-spacing 0;
 		color: lighten(@dark, 90%);
 		.selection(lighten(@dark, 30%), @light);
 
@@ -113,6 +117,7 @@
 
 #portfolio {
 	#projects {
+		padding-top: @section-spacing;
 		.list-unstyled;
 		.container;
 		// Force GPU layer
@@ -123,7 +128,7 @@
 		max-width: 500px;
 		font-size: 120%;
 		color: @gray;
-		margin: 140px 0;
+		margin-bottom: @section-spacing;
 
 		.clearfix;
 		.make-row();
@@ -135,8 +140,10 @@
 		}
 
 		.image {
+			-webkit-tap-highlight-color: rgba(0, 0, 0, 0.5);
 			display: block;
 			.make-sm-column(7);
+
 			.thumb {
 				.img-responsive;
 				width: 100%;
@@ -144,15 +151,6 @@
 			}
 
 			.zoom-icon {
-				display: none;
-			}
-		}
-
-		a.image {
-			-webkit-tap-highlight-color: rgba(0, 0, 0, 0.5);
-
-			.zoom-icon {
-				display: block;
 				position: absolute;
 				right: 14px;
 				bottom: 4px;
@@ -189,6 +187,7 @@
 
 		@media (min-width: @screen-sm) {
 			max-width: none;
+			margin-bottom: @section-spacing * 2;
 
 			.title {
 				margin: 0 0 0.25em 0;
