@@ -21,7 +21,8 @@ var fs = require("fs"),
 	eliminate = require("css-eliminator"),
 	browserify = require("browserify"),
 	uglify = require("uglify-js"),
-	_ = require("lodash");
+	_ = require("lodash"),
+	datauri = require("data-uri-stream");
 
 module.exports = function() {
 	return combineStreams([
@@ -94,13 +95,9 @@ function combiner() {
 // Like combiner but preserve order of data events
 function concater() {
 	return map(function(stream, callback) {
-		console.log("reading", stream);
 		stream.pipe(concat(function(data) {
 			callback(null, data);
 		}));
-		// stream.pipe(output, { end: false });
-		// stream.on("error", callback);
-		// stream.on("end", callback);
 	});
 }
 
@@ -172,8 +169,31 @@ function script() {
 		.pipe(jscompressor());
 }
 
+function prefixer(prefix) {
+	var first = true;
+	return mapSync(function(data) {
+		if (first) {
+			data = prefix + data;
+			first = false;
+		}
+		return data;
+	});
+}
+
+function suffixer(suffix) {
+	return through(null, function() {
+		this.queue(suffix);
+		this.queue(null);
+	});
+}
+
 function svgcss() {
-	return source("zoom-icon-def.svg");
+	var prefix = prefixer(".zoom-icon { background-image: url(\"");
+	var suffix = suffixer("\") }");
+	return source("zoom-icon.svg").pipe(datauri({
+		type: "image/svg+xml",
+		charset: "utf-8",
+	})).pipe(prefix).pipe(suffix);
 }
 
 function style(dom) {
@@ -274,9 +294,7 @@ function projects() {
 
 function renderProject(project) {
 	return mustachestreams("templates/project.mustache", project, {
-		image: mustachestreams("templates/image.mustache", project, {
-			zoom: source("zoom-icon-ref.svg"),
-		}),
+		image: mustache("templates/image.mustache", project),
 	});
 }
 

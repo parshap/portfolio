@@ -5,7 +5,7 @@
   "main": "generate.js",
   "dependencies": {
     "concat-stream": "~1.0.1",
-    "connect": "~2.9.1",
+    "connect": "~2.9.2",
     "duplexer": "~0.1.1",
     "hogan.js": "~3.0.0",
     "through": "~2.3.4",
@@ -22,7 +22,8 @@
     "raf.js": "0.0.3",
     "uglify-js": "~2.4.0",
     "css": "~1.4.4",
-    "lodash": "~2.2.1"
+    "lodash": "~2.2.1",
+    "data-uri-stream": "~1.0.0"
   },
   "devDependencies": {
     "tape": "~1.1.1"
