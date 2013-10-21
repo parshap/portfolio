@@ -1,20 +1,22 @@
 // jshint browser:true, node:true
 "use strict";
 
-// Shim old browsers
-require("./shim");
+var HAS_QUERYSELECTOR = !! document.querySelector,
+	HAS_BIND = !! Function.prototype.bind;
 
-var fitText = require("./lib/fittext"),
-	effects = require("./lib/effects");
+if (HAS_QUERYSELECTOR && HAS_BIND) {
+	var fitText = require("./lib/fittext"),
+		effects = require("./lib/effects");
 
-var q = document.querySelector.bind(document),
-	id = document.getElementById.bind(document);
+	var q = document.querySelector.bind(document),
+		id = document.getElementById.bind(document);
 
-fitText(q("#intro .heading"), 1.4);
+	fitText(q("#intro .heading"), 1.4);
 
-effects({
-	header: id("intro"),
-	projects: id("projects"),
-	bodybg: id("bg"),
-	photo: id("photo"),
-});
+	effects({
+		header: id("intro"),
+		projects: id("projects"),
+		bodybg: id("bg"),
+		photo: id("photo"),
+	});
+}
