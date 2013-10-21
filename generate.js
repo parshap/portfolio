@@ -12,7 +12,6 @@ var fs = require("fs"),
 	readArray = require("event-stream").readArray,
 	pipeline = require("event-stream").pipeline,
 	through = require("through"),
-	mapLimit = require("map-stream-limit"),
 	duplexer = require("duplexer"),
 	Hogan = require("hogan.js"),
 	less = require("less"),
@@ -94,18 +93,15 @@ function combiner() {
 
 // Like combiner but preserve order of data events
 function concater() {
-	var output = through();
-
-	var input = mapLimit(function(stream, callback) {
-		stream.pipe(output, { end: false });
-		stream.on("error", callback);
-		stream.on("end", callback);
-	}, 1);
-
-	input.on("end", output.emit.bind(output, "end"));
-	input.on("error", output.emit.bind(output, "error"));
-
-	return duplexer(input, output);
+	return map(function(stream, callback) {
+		console.log("reading", stream);
+		stream.pipe(concat(function(data) {
+			callback(null, data);
+		}));
+		// stream.pipe(output, { end: false });
+		// stream.on("error", callback);
+		// stream.on("end", callback);
+	});
 }
 
 // Create a domain with errors bound to the given stream
@@ -130,7 +126,6 @@ function _template(context, streams) {
 
 function template(context) {
 	return _template(context, {
-		zoom: source("zoom-icon-def.svg"),
 		script: script(),
 	});
 }
@@ -177,8 +172,15 @@ function script() {
 		.pipe(jscompressor());
 }
 
+function svgcss() {
+	return source("zoom-icon-def.svg");
+}
+
 function style(dom) {
-	return lesss("style.less").pipe(csscompressor(dom));
+	return readArray([
+		lesss("style.less").pipe(csscompressor(dom)),
+		svgcss(),
+	]).pipe(concater());
 }
 
 // Render the mustache template at the given path

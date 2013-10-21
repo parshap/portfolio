@@ -13,7 +13,6 @@
     "map-stream": "0.0.3",
     "mime": "~1.2.11",
     "findit": "~1.1.0",
-    "map-stream-limit": "1",
     "css-eliminator": "",
     "mkdirp": "~0.3.5",
     "event-stream": "~3.0.16",
