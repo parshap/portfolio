@@ -70,9 +70,10 @@
 
 	.text {
 		max-width: 500px;
-		p {
-			margin: 0;
-		}
+	}
+
+	p {
+		margin: 0;
 	}
 
 	#photo {
@@ -89,11 +90,11 @@
 	@media (min-width: @screen-sm) {
 		font-size: 123%;
 		padding: 100px 0 @section-spacing 0;
-		color: lighten(@dark, 90%);
+		color: lighten(@dark, 95%);
 		.selection(lighten(@dark, 30%), @light);
 
 		.heading {
-			color: lighten(@dark, 95%);
+			color: inherit;
 		}
 
 		.text-wrapper {
@@ -135,8 +136,15 @@
 		.clearfix;
 		.make-row();
 
-		.title {
+		.main {
 			.make-sm-column(5);
+		}
+
+		aside {
+			.make-sm-column(7);
+		}
+
+		.title {
 			.project-heading-type();
 			font-size: 190%;
 		}
@@ -144,7 +152,6 @@
 		.image {
 			-webkit-tap-highlight-color: rgba(0, 0, 0, 0.5);
 			display: block;
-			.make-sm-column(7);
 			opacity: 0.85;
 
 			.thumb {
@@ -171,23 +178,21 @@
 			}
 		}
 
-		.info {
-			.make-sm-column(5);
-			.desc {
-				color: lighten(@dark, 46.5%);
-			}
-			.date {
-				font-style: italic;
-			}
+		.desc {
+			opacity: 0.8;
+		}
+
+		.date {
+			font-style: italic;
 		}
 
 		@media (max-width: @thumb-width) {
-			.image {
+			aside{
 				padding: 0;
 			}
 		}
 
-		.info {
+		.main {
 			margin: 10px 0;
 
 			.date::after {
@@ -204,25 +209,25 @@
 				text-align: right;
 			}
 
-			.image {
+			aside {
 				float: right;
 			}
 
-			.info {
+			.main {
 				margin: 0;
 				text-align: right;
+			}
 
-				.date::after {
-					content: none;
-				}
+			.date::after {
+				content: none;
+			}
 
-				.date, .desc {
-					display: block;
-				}
+			.date, .desc {
+				display: block;
+			}
 
-				.date {
-					margin: 0 0 0.25em 0;
-				}
+			.date {
+				margin: 0 0 0.25em 0;
 			}
 		}
 	}

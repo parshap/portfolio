@@ -22,8 +22,8 @@
     "prefixed": "0.0.0",
     "raf.js": "0.0.3",
     "uglify-js": "~2.4.0",
-    "wolfy87-eventemitter": "~4.2.4",
-    "css": "~1.4.4"
+    "css": "~1.4.4",
+    "lodash": "~2.2.1"
   },
   "devDependencies": {
     "tape": "~1.1.1"
