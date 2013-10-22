@@ -187,19 +187,18 @@ function suffixer(suffix) {
 	});
 }
 
-function svgcss() {
+function zoomiconcss() {
 	var prefix = prefixer(".zoom-icon { background-image: url(\"");
 	var suffix = suffixer("\") }");
-	return source("zoom-icon.svg").pipe(datauri({
-		type: "image/svg+xml",
-		charset: "utf-8",
+	return fs.createReadStream("zoom-icon.png").pipe(datauri({
+		type: "image/png",
 	})).pipe(prefix).pipe(suffix);
 }
 
 function style(dom) {
 	return readArray([
 		lesss("style.less").pipe(csscompressor(dom)),
-		svgcss(),
+		zoomiconcss(),
 	]).pipe(concater());
 }
 
