@@ -26,10 +26,10 @@ var fs = require("fs"),
 
 module.exports = function() {
 	return combineStreams([
-		staticHTML("templates/index.html"),
-		staticHTML("templates/error.html"),
-		staticHTML("templates/404.html"),
-		staticFile("templates/robots.txt", null, TYPES.txt),
+		staticHTML("templates/index.html", "index.html"),
+		staticHTML("templates/error.html", "error.html"),
+		staticHTML("templates/404.html", "404.html"),
+		staticFile("templates/robots.txt", "robots.txt", TYPES.txt),
 		portfolio(),
 	]);
 };
