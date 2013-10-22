@@ -32,6 +32,14 @@
 	transform: @args;
 }
 
+.transform-origin(@args...) {
+	-webkit-transform-origin: @args;
+	-moz-transform-origin: @args;
+	-ms-transform-origin: @args;
+	-o-transform-origin: @args;
+	transform-origin: @args;
+}
+
 .transform-scale(@ratio) {
 	.transform(scale(@ratio));
 }
@@ -74,6 +82,7 @@
 
 	.container {
 		.force-layer();
+		.transform-origin(center bottom);
 	}
 
 	.text {
