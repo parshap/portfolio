@@ -106,7 +106,7 @@
 
 	@media (min-width: @screen-sm) {
 		font-size: 123%;
-		padding: 100px 0 @section-spacing 0;
+		padding: (@section-spacing * 1.2) 0 @section-spacing 0;
 		color: lighten(@dark, 95%);
 		.selection(lighten(@dark, 30%), @light);
 
@@ -135,7 +135,7 @@
 
 #projects {
 	color: @gray;
-	padding-top: @section-spacing;
+	padding: @section-spacing 0;
 	.list-unstyled;
 	.container;
 	// Force GPU layer
@@ -145,6 +145,10 @@
 		max-width: 500px;
 		font-size: 120%;
 		margin-bottom: @section-spacing;
+
+		&:last-child {
+			margin-bottom: 0;
+		}
 
 		.clearfix;
 		.make-row();
