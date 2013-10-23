@@ -1,12 +1,21 @@
 @import "./vendor/bootstrap/less/bootstrap.less";
 
-@grid-gutter-width: 20px;
-@thumb-width: 420px;
-@section-spacing: 80px;
-@body-background: #fafafa;
+// Bootstrap adds 18px to the container's width to get the media query
+// break-point
+@MAGIC_SCREEN_GUTTER: 18px;
 
 @dark: #000;
 @light: #fff;
+@body-background: #fafafa;
+
+@grid-gutter-width: 20px;
+@section-spacing: 80px;
+@gutter-width: 30px;
+@text-width: 290px;
+@thumb-width: 420px;
+@advanced-width: (3 * @gutter-width) + @text-width + @thumb-width;
+@screen-advanced: (@MAGIC_SCREEN_GUTTER + @advanced-width);
+
 
 .project-heading-type() {
 	font-family: "HelveticaNeueBlack",
@@ -41,14 +50,6 @@
 	transform-origin: @args;
 }
 
-.transform-style(@style) {
-	-webkit-transform-style: @style;
-	-moz-transform-style: @style;
-	-ms-transform-style: @style;
-	-o-transform-style: @style;
-	transform-style: @style;
-}
-
 .perspective(@perspective) {
 	-webkit-perspective: @perspective;
 	-moz-perspective: @perspective;
@@ -79,28 +80,101 @@
 	::selection { ._selection(); }
 }
 
-.container {
-	max-width: 740px;
-	background-color: @body-background;
+.ol-container() {
+	// Make OL act as a container with no extra spacing
+	.list-unstyled;
+	margin: 0;
+	.container;
 }
 
-.selection(darken(@light, 20%), lighten(@dark, 20%));
+.absolute-center(@width, @height) {
+	position: absolute;;
+	width: @width;
+	height: @height;
+	left: 50%;
+	top: 50%;
+	margin-left: -@width / 2;
+	margin-top: -@height / 2;
+}
+
+// -- Layout
+
+#headerbg, #bodybg {
+	// Only used in advanced mode
+	display: none;
+}
+
+#intro, #projects {
+	.container();
+}
 
 #intro {
-	.container();
-	font-size: 110%;
-	color: lighten(@dark, 30%);
-
 	.main {
 		max-width: 500px;
 	}
 
+	#photo {
+		// Only used in advanced mode
+		display: none;
+	}
+}
+
+#projects {
+	.ol-container();
+	padding-top: @section-spacing;
+	padding-bottom: @section-spacing;
+
+	.project {
+		max-width: 500px;
+		margin-bottom: @section-spacing;
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+
+		.main {
+			margin: 10px 0;
+		}
+
+		.image {
+			display: block;
+			position: relative;
+			max-width: @thumb-width;
+
+			@media (max-width: @thumb-width) {
+				margin: 0 -@grid-gutter-width / 2;
+			}
+
+			.thumb {
+				display: block;
+				max-width: 100%;
+				height: auto;
+			}
+
+			.zoom-icon {
+				.absolute-center(80px, 80px);
+				background-position: center center;
+				background-repeat: no-repeat;
+			}
+		}
+	}
+}
+
+// -- Styling
+
+.selection(darken(@light, 20%), lighten(@dark, 20%));
+
+body {
+	background-color: @body-background;
+}
+
+#intro {
+	font-size: 110%;
+	color: lighten(@dark, 30%);
+
+	// No paragraph spacing
 	p {
 		margin: 0;
-	}
-
-	#photo {
-		display: none;
 	}
 
 	.heading {
@@ -109,12 +183,64 @@
 		margin: 0 0 0.4em 0;
 		padding: 0 0 0.1em 0;
 	}
+}
 
-	@media (min-width: @screen-sm) {
+#projects {
+	color: @gray;
+	font-size: 120%;
+
+	.project {
+		.title {
+			.project-heading-type();
+			font-size: 190%;
+		}
+
+		.image {
+			-webkit-tap-highlight-color: rgba(0, 0, 0, 0.5);
+			opacity: 0.80;
+
+			.zoom-icon {
+				opacity: 0.75;
+			}
+
+			&:link:hover {
+				opacity: 1;
+				.zoom-icon {
+					opacity: 1;
+				}
+			}
+		}
+
+		.desc {
+			color: lighten(@gray, 10%);
+		}
+
+		.date {
+			font-style: italic;
+
+			&::after {
+				content: ".";
+			}
+		}
+	}
+}
+
+// -- Advanced Effects
+
+@media (min-width: @screen-advanced) {
+	#intro, #projects {
+		max-width: @advanced-width;
+		padding-left: @gutter-width;
+		padding-right: @gutter-width;
+	}
+
+	#intro {
 		font-size: 123%;
 		color: lighten(@dark, 95%);
+		background-color: fadeOut(@body-background, 75%);
+		padding-top: (@section-spacing * 1.2);
+		padding-bottom: @section-spacing;
 		.selection(lighten(@dark, 30%), @light);
-		padding: (@section-spacing * 1.2) 0 @section-spacing 0;
 
 		.heading {
 			color: inherit;
@@ -137,174 +263,54 @@
 			opacity: 0.9;
 		}
 	}
-}
 
-#projects {
-	// Make sure OL act as a container with no extra spacing
-	.list-unstyled;
-	margin: 0;
-	.container;
+	#projects {
+		background-color: fadeOut(@body-background, 25%);
+	}
 
-	color: @gray;
-	padding: @section-spacing 0;
-
-	.project {
-		max-width: 500px;
-		font-size: 120%;
-		margin-bottom: @section-spacing;
-
-		&:last-child {
-			margin-bottom: 0;
-		}
-
-		.clearfix;
-		.make-row();
+	#projects .project {
+		max-width: none;
+		margin-bottom: @section-spacing * 2;
+		.clearfix();
 
 		.main {
-			.make-sm-column(5);
-		}
-
-		aside {
-			.make-sm-column(7);
-		}
-
-		.title {
-			.project-heading-type();
-			font-size: 190%;
+			float: left;
+			text-align: right;
+			width: @text-width;
 		}
 
 		.image {
-			-webkit-tap-highlight-color: rgba(0, 0, 0, 0.5);
-			display: block;
-			position: relative;
-			opacity: 0.80;
-			max-width: @thumb-width;
-
-			.thumb {
-				.img-responsive;
-				width: 100%;
-			}
-
-			.zoom-icon {
-				position: absolute;
-				background-position: center center;
-				background-repeat: no-repeat;
-				top: 50%;
-				left: 50%;
-				margin-top: -40px;
-				margin-left: -40px;
-				width: 80px;
-				height: 80px;
-				opacity: 0.75;
-			}
-
-			&:link:hover {
-				opacity: 1;
-				.zoom-icon {
-					opacity: 1;
-				}
-			}
+			float: right;
+			width: @thumb-width;
 		}
 
-		.desc {
-			color: lighten(@gray, 10%);
+		.title {
+			margin: 0 0 0.25em 0;
+			text-align: right;
+		}
+
+		.date, .desc {
+			display: block;
 		}
 
 		.date {
-			font-style: italic;
-		}
+			margin: 0 0 0.25em 0;
 
-		@media (max-width: @thumb-width) {
-			aside{
-				padding: 0;
-			}
-		}
-
-		.main {
-			margin: 10px 0;
-
-			.date::after {
-				content: ".";
-			}
-		}
-
-		@media (min-width: @screen-sm) {
-			max-width: none;
-			margin-bottom: @section-spacing * 2;
-
-			.title {
-				margin: 0 0 0.25em 0;
-				text-align: right;
-			}
-
-			aside {
-				float: right;
-			}
-
-			.main {
-				margin: 0;
-				text-align: right;
-			}
-
-			.date::after {
+			&::after {
 				content: none;
-			}
-
-			.date, .desc {
-				display: block;
-			}
-
-			.date {
-				margin: 0 0 0.25em 0;
 			}
 		}
 	}
-}
 
-// ---------------------------
-
-// -- Advanced Effects
-
-@media (min-width: @screen-sm) {
+	// -- Background colors
 
 	// Make sure we cover the entire viewport
 	html, body {
 		min-height: 100%;
 	}
 
-	// 3d space perspective
-	// Camera at z = 800px, x = 50%, y = height of header
-	body {
-		.perspective(800px);
-		// We're aiming to be about level with the bottom of the header. This
-		// gets overridden in JS to the exact px height of the header.
-		.perspective-origin(center 10%);
-	}
-
-	#intro {
-		// We will apply opacity to this element which requires us to use
-		// transform-style to have it use its parent's 3d context
-		// .transform-style(preserve-3d);
-
-		// We will be translating this around so make sure it is accelerated
-		.force-layer();
-
-		// Apply the rotation from the bottom of the element.
-		.transform-origin(center bottom);
-
-		background-color: fadeOut(@body-background, 75%);
-	}
-
-	#projects {
-		.transform-origin(center top);
-
-		// We will be transforming and changing opacity
-		.force-layer();
-	}
-
-	// -- Background layers
-
 	#bodybg, #headerbg {
+		display: block;
 		position: fixed;
 		width: 100%;
 		left: 0;
@@ -324,5 +330,31 @@
 	// And it must scroll away with the header, not be fixed
 	#headerbg {
 		position: absolute;
+	}
+
+	// -- 3D Transforms
+
+	// Force layers for animations (opacity and transforms)
+	#intro, #projects {
+		.force-layer();
+	}
+
+	// Set 3d space perspective
+	// Camera at z = 800px, x = 50%, y = height of header
+	body {
+		.perspective(800px);
+		// We're aiming to be about level with the bottom of the header. This
+		// gets overridden in JS to the exact px height of the header.
+		.perspective-origin(center 10%);
+	}
+
+	#intro {
+		// Transform from the bottom (line up with #projects)
+		.transform-origin(center bottom);
+	}
+
+	#projects {
+		// Transform from the top (lien up with #intro)
+		.transform-origin(center top);
 	}
 }
