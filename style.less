@@ -201,17 +201,21 @@ body {
 
 		.image {
 			-webkit-tap-highlight-color: rgba(0, 0, 0, 0.5);
-			opacity: 0.80;
+			opacity: 0.5;
 
 			.zoom-icon {
 				opacity: 0.75;
 			}
 
-			&:link:hover {
-				opacity: 1;
+			&:focus, &:hover {
+				opacity: 0.75;
 				.zoom-icon {
 					opacity: 1;
 				}
+			}
+
+			&:active {
+				opacity: 1;
 			}
 		}
 
