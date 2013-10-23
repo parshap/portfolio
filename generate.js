@@ -31,6 +31,7 @@ module.exports = function() {
 		staticHTML("templates/404.html", "404.html"),
 		staticFile("templates/robots.txt", "robots.txt", TYPES.txt),
 		portfolio(),
+		images(),
 	]);
 };
 
@@ -49,18 +50,11 @@ function staticHTML(src, dst) {
 }
 
 function portfolio() {
-	return combineStreams([
-		portfolioHome(),
-		portfolioImages(),
-	]);
-}
-
-function portfolioHome() {
-	return portfolioHomeHTML().pipe(page(
+	return portfolioHTML().pipe(page(
 		"me/index.html", "text/html; charset=UTF-8"));
 }
 
-function portfolioImages() {
+function images() {
 	return finder("images").pipe(pager("me/"));
 }
 
@@ -297,10 +291,10 @@ function renderProject(project) {
 	});
 }
 
-function portfolioHTML() {
+function projectsHTML() {
 	var out = through();
 	projects().pipe(concat(function(projects) {
-		mustache("templates/portfolio.mustache", {
+		mustache("templates/projects.mustache", {
 			projects: projects,
 		}).pipe(out);
 	}));
@@ -334,10 +328,10 @@ function pager(prefix) {
 	return duplexer(input, output);
 }
 
-function portfolioHomeHTML() {
+function portfolioHTML() {
 	return concatStreams([
 		source("templates/intro.html"),
-		portfolioHTML(),
+		projectsHTML(),
 	]).pipe(template({ name: "home" }));
 }
 

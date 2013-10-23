@@ -12,21 +12,18 @@ if ( ! HAS_QUERYSELECTOR || ! HAS_BIND) {
 var fitText = require("./lib/fittext"),
 	effects = require("./lib/effects");
 
-var q = document.querySelector.bind(document),
-	id = document.getElementById.bind(document);
+var id = document.getElementById.bind(document);
 
 var header = id("intro"),
-	headerContainer = header.querySelector(".container"),
 	photo = id("photo");
 
 var HAS_CANVAS = photo.getContext;
 
-fitText(q("#intro .heading"), 1.4);
+fitText(header.querySelector(".heading"), 1.4);
 
 effects({
-	header: id("intro"),
-	headerContainer: headerContainer,
 	photo: HAS_CANVAS ? photo : null,
+	header: header,
 	projects: id("projects"),
 	headerbg: id("headerbg"),
 	bodybg: id("bodybg"),
