@@ -128,6 +128,7 @@ function compressor(fn) {
 		if (process.env.NODE_ENV !== "production") {
 			return through();
 		}
+
 		return concat(function(source) {
 			this.emit("data", fn(source));
 			this.emit("end");
@@ -145,6 +146,10 @@ var jscompressor = compressor(function(source) {
 });
 
 function csscompressor(dom) {
+	if (process.env.NODE_ENV !== "production") {
+		return through();
+	}
+
 	return pipeline(
 		eliminator(dom),
 		mapSync(function(data) {
