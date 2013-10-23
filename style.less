@@ -15,6 +15,7 @@
 @thumb-width: 420px;
 @advanced-width: (3 * @gutter-width) + @text-width + @thumb-width;
 @screen-advanced: (@MAGIC_SCREEN_GUTTER + @advanced-width);
+@screen-thumb: (@thumb-width + @MAGIC_SCREEN_GUTTER);
 
 
 .project-heading-type() {
@@ -141,20 +142,23 @@
 			position: relative;
 			max-width: @thumb-width;
 
-			@media (max-width: @thumb-width) {
-				margin: 0 -@grid-gutter-width / 2;
-			}
-
 			.thumb {
 				display: block;
-				max-width: 100%;
-				height: auto;
 			}
 
 			.zoom-icon {
 				.absolute-center(80px, 80px);
 				background-position: center center;
 				background-repeat: no-repeat;
+			}
+
+			@media (max-width: (@screen-thumb + (@grid-gutter-width / 2))) {
+				margin: 0 -@grid-gutter-width / 2;
+
+				.thumb {
+					max-width: 100%;
+					height: auto;
+				}
 			}
 		}
 	}
