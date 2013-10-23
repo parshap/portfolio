@@ -3,6 +3,7 @@
 @grid-gutter-width: 20px;
 @thumb-width: 420px;
 @section-spacing: 80px;
+@body-background: #fafafa;
 
 @dark: #000;
 @light: #fff;
@@ -40,9 +41,30 @@
 	transform-origin: @args;
 }
 
-.transform-scale(@ratio) {
-	.transform(scale(@ratio));
+.transform-style(@style) {
+	-webkit-transform-style: @style;
+	-moz-transform-style: @style;
+	-ms-transform-style: @style;
+	-o-transform-style: @style;
+	transform-style: @style;
 }
+
+.perspective(@perspective) {
+	-webkit-perspective: @perspective;
+	-moz-perspective: @perspective;
+	-ms-perspective: @perspective;
+	-o-perspective: @perspective;
+	perspective: @perspective;
+}
+
+.perspective-origin(@origin) {
+	-webkit-perspective-origin: @origin;
+	-moz-perspective-origin: @origin;
+	-ms-perspective-origin: @origin;
+	-o-perspective-origin: @origin;
+	perspective-origin: @origin;
+}
+
 .force-layer() {
 	.transform(translateZ(0));
 }
@@ -59,31 +81,14 @@
 
 .container {
 	max-width: 740px;
+	background-color: @body-background;
 }
 
 .selection(darken(@light, 20%), lighten(@dark, 20%));
 
-#bg {
-	position: fixed;
-	width: 100%;
-	height: 100%;
-	left: 0;
-	top: 0;
-	z-index: -1;
-	// Force GPU layer
-	.force-layer();
-}
-
 #intro {
 	font-size: 110%;
 	color: lighten(@dark, 30%);
-	// Force GPU layer
-	.force-layer();
-
-	.container {
-		.force-layer();
-		.transform-origin(center bottom);
-	}
 
 	.text {
 		max-width: 500px;
@@ -106,9 +111,12 @@
 
 	@media (min-width: @screen-sm) {
 		font-size: 123%;
-		padding: (@section-spacing * 1.2) 0 @section-spacing 0;
 		color: lighten(@dark, 95%);
 		.selection(lighten(@dark, 30%), @light);
+
+		.container {
+			padding: (@section-spacing * 1.2) 0 @section-spacing 0;
+		}
 
 		.heading {
 			color: inherit;
@@ -134,14 +142,13 @@
 }
 
 #projects {
-	color: @gray;
-	padding: @section-spacing 0;
+	// Make sure OL act as a container with no extra spacing
 	.list-unstyled;
 	margin: 0;
 	.container;
-	.transform-origin(center top);
-	// Force GPU layer
-	.force-layer();
+
+	color: @gray;
+	padding: @section-spacing 0;
 
 	.project {
 		max-width: 500px;
@@ -253,5 +260,76 @@
 				margin: 0 0 0.25em 0;
 			}
 		}
+	}
+}
+
+// ---------------------------
+
+// -- Advanced Styles
+
+@media (min-width: @screen-sm) {
+
+	// Make sure we cover the entire viewport
+	html, body {
+		min-height: 100%;
+	}
+
+	// 3d space perspective
+	// Camera at z = 800px, x = 50%, y = height of header
+	body {
+		.perspective(800px);
+		// We're aiming to be about level with the bottom of the header. This
+		// gets overridden in JS to the exact px height of the header.
+		.perspective-origin(center 10%);
+	}
+
+	#intro {
+		// We will apply opacity to this element which requires us to use
+		// transform-style to have it use its parent's 3d context
+		.transform-style(preserve-3d);
+
+		// We will be translating this around so make sure it is accelerated
+		.force-layer();
+
+		.container {
+			// We will be 3d rotating this layer so make sure it is accelerated
+			.force-layer();
+			// Apply the rotation from the bottom of the element.
+			.transform-origin(center bottom);
+
+			background-color: fadeOut(@body-background, 75%);
+		}
+	}
+
+	#portfolio {
+		.transform-style(preserve-3d);
+	}
+
+	#projects {
+		.transform-origin(center top);
+
+		// We will be transforming and changing opacity
+		.force-layer();
+	}
+
+	#bodybg, #headerbg {
+		position: fixed;
+		left: 0;
+		top: 0;
+		z-index: -1;
+
+		// Force GPU layer for animating opacity
+		.force-layer();
+	}
+
+	// Body background covers the entire page
+	#bodybg {
+		width: 100%;
+		height: 100%;
+	}
+
+	// Header background gets height set in JS - see ./lib/effects.js
+	#headerbg {
+		width: 100%;
 	}
 }

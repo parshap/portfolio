@@ -28,5 +28,6 @@ effects({
 	headerContainer: headerContainer,
 	photo: HAS_CANVAS ? photo : null,
 	projects: id("projects"),
-	bodybg: id("bg"),
+	headerbg: id("headerbg"),
+	bodybg: id("bodybg"),
 });
