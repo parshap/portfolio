@@ -30,6 +30,7 @@ module.exports = function() {
 		staticHTML("templates/error.html", "error.html"),
 		staticHTML("templates/404.html", "404.html"),
 		staticFile("templates/robots.txt", "robots.txt", TYPES.txt),
+		staticFile("favicon.ico", "favicon.ico", TYPES.ico),
 		portfolio(),
 		images(),
 	]);
@@ -38,6 +39,8 @@ module.exports = function() {
 var TYPES = {
 	"html": "text/html; charset=UTF-8",
 	"txt": "text/plain",
+	"ico": "image/x-icon",
+	"png": "image/png",
 };
 
 function staticFile(src, dst, type) {
@@ -102,23 +105,21 @@ function streamDomain(stream) {
 	return d;
 }
 
-function _template(context, streams) {
-	var output = through();
-	var input = through();
-
-	streams.body = input;
-	var firstPass = mustachestreams("templates/template.mustache", context, streams);
-	style(firstPass).pipe(concat(function(style) {
-		context.style = style;
-		mustache("templates/template.mustache", context).pipe(output);
-	}));
-	return duplexer(input, output);
-}
-
 function template(context) {
-	return _template(context, {
+	var t = "templates/template.mustache",
+		output = through(),
+		input = through(),
+		firstPass = mustachestreams(t, context, { body: input }),
+		uristream = datauri({ type: TYPES.ico }),
+		favicon = fs.createReadStream("favicon.ico").pipe(uristream);
+
+	mustachestreams("templates/template.mustache", context, {
+		style: style(firstPass),
+		favicon: favicon,
 		script: script(),
-	});
+	}).pipe(output);
+
+	return duplexer(input, output);
 }
 
 // Helper to create compressor stream creator functions
@@ -182,11 +183,13 @@ function suffixer(suffix) {
 }
 
 function zoomiconcss() {
-	var prefix = prefixer(".zoom-icon { background-image: url(\"");
-	var suffix = suffixer("\") }");
-	return fs.createReadStream("zoom-icon.png").pipe(datauri({
-		type: "image/png",
-	})).pipe(prefix).pipe(suffix);
+	var prefix = prefixer(".zoom-icon { background-image: url(\""),
+		suffix = suffixer("\") }"),
+		datauristream = datauri({ type: TYPES.png });
+	return fs.createReadStream("zoom-icon.png")
+		.pipe(datauristream)
+		.pipe(prefix)
+		.pipe(suffix);
 }
 
 function style(dom) {
