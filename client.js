@@ -19,7 +19,7 @@ var header = id("intro"),
 
 var HAS_CANVAS = photo.getContext;
 
-fitText(header.querySelector(".heading"), 1.4);
+fitText(header.querySelector(".heading"), 1.25);
 
 effects({
 	photo: HAS_CANVAS ? photo : null,

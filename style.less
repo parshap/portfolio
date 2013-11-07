@@ -9,7 +9,7 @@
 @body-background: #fafafa;
 
 @grid-gutter-width: 20px;
-@section-spacing: 80px;
+@section-spacing: 60px;
 @gutter-width: 30px;
 @text-width: 330px;
 @thumb-width: 420px;
@@ -114,7 +114,7 @@
 
 #intro {
 	.main {
-		max-width: 500px;
+		max-width: 520px;
 	}
 
 	#photo {
@@ -129,7 +129,7 @@
 	padding-bottom: @section-spacing;
 
 	.project {
-		max-width: 500px;
+		max-width: 520px;
 		margin-bottom: @section-spacing;
 
 		&:last-child {
@@ -188,7 +188,6 @@ body {
 		color: lighten(@dark, 20%);
 		font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 		margin: 0 0 0.4em 0;
-		padding: 0 0 0.1em 0;
 	}
 }
 
@@ -250,10 +249,10 @@ body {
 	}
 
 	#intro {
-		font-size: 123%;
+		font-size: 115%;
 		color: lighten(@dark, 95%);
 		background-color: fadeOut(@body-background, 75%);
-		padding-top: (@section-spacing * 1.2);
+		padding-top: @section-spacing;
 		padding-bottom: @section-spacing;
 		.selection(lighten(@dark, 30%), @light);
 
@@ -262,20 +261,23 @@ body {
 		}
 
 		.text-wrapper {
-			background-color: lighten(@dark, 33%);
+			background-color: lighten(@dark, 40%);
+		}
+
+		p {
+			text-align: justify;
 		}
 
 		p .text-wrapper {
-			padding: 0.2em 0;
+			padding: 0.1em 0;
 		}
 
 		#photo {
-			border: 2px solid;
 			display: block;
+			max-width: 210px;
+			border: 2px solid;
 			float: right;
-			max-width: 200px;
-			max-height: 250px;
-			opacity: 0.9;
+			opacity: 0.85;
 		}
 	}
 
@@ -285,7 +287,7 @@ body {
 
 	#projects .project {
 		max-width: none;
-		margin-bottom: @section-spacing * 2;
+		margin-bottom: @section-spacing * 1.5;
 		.clearfix();
 
 		.main {
