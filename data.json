@@ -3,35 +3,35 @@
 		{
 			"title": "FlikStak",
 			"date": "2012\u20132013",
-			"desc": "Social network to oragnize and share ideas",
+			"desc": "Social tool to organize and share ideas. Worked on web application and backend APIs.",
 			"thumb": "flikstak-thumb.jpg",
 			"image": "flikstak.jpg"
 		},
 		{
 			"title": "Hunter Wise Trading Platform",
 			"date": "2009\u20132012",
-			"desc": "Electronic trading platform for commodities trading firm, handling $1b in trade volume yearly.",
+			"desc": "Electronic trading platform for commodities trading firm, handling $1b in trade volume yearly. Led project, created team, engineered full stack.",
 			"thumb": "trading-thumb.png",
 			"image": "trading.png"
 		},
 		{
 			"title": "Zelda Madness",
 			"date": "2010",
-			"desc": "Fundraising website for video game marathon raising money for cancer research and treatment.",
+			"desc": "Fundraising website for video game charity marathon, raising money for cancer research and treatment. Created website and advised on technical aspects such as accepting credit card payments, video production, and streaming.",
 			"thumb": "zelda-thumb.jpg",
 			"image": "zelda.jpg"
 		},
 		{
 			"title": "Amber Pollard",
 			"date": "2009\u20132010",
-			"desc": "E-commerce solution for luxury handbag designer.",
+			"desc": "E-commerce solution for luxury handbag designer. Integrated PHP-based website with Shopify and built tooling for reporting and upkeep.",
 			"thumb": "amber-thumb.jpg",
 			"image": "amber.jpg"
 		},
 		{
 			"title": "Atlantic Medical Imaging",
 			"date": "2009",
-			"desc": "Content management system and corporate website for medical imaging company.",
+			"desc": "Content management system and corporate website for medical imaging company. Created rich in-place website editing system for editors to rapidly release new content. With Data stored in MySQL with minimal PHP templating and API layer.",
 			"thumb": "ami-thumb.jpg",
 			"image": "ami.jpg"
 		},
