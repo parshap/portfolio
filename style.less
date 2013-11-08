@@ -20,6 +20,7 @@
 @screen-advanced: (@MAGIC_SCREEN_GUTTER + @advanced-width);
 @screen-thumb: (@thumb-width + @MAGIC_SCREEN_GUTTER);
 
+// Helper mixins
 
 .project-heading-type() {
 	font-family: "HelveticaNeueBlack",
@@ -173,6 +174,13 @@
 
 body {
 	background-color: @body-background;
+}
+
+// Undo bootstrap link styling
+// @TODO: Add link styling. In advanced mode: background color of color2
+a, a:hover {
+	color: inherit;
+	text-decoration: none;
 }
 
 #intro {
