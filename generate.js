@@ -287,6 +287,10 @@ function unwrapper(prop) {
 	});
 }
 
+function markdown(src) {
+	return source(src).pipe(mapSync(marked));
+}
+
 function projects() {
 	return source("./data.json")
 		.pipe(json())
@@ -296,9 +300,16 @@ function projects() {
 }
 
 function renderProject(project) {
-	return mustachestreams("templates/project.mustache", project, {
-		image: mustache("templates/image.mustache", project),
-	});
+	var tr = trumpet();
+
+	// Input project template into trumpet
+	mustache("templates/project.mustache", project).pipe(tr);
+
+	// Write project description into `.desc`
+	markdown("templates/projects/" + project.id + ".md")
+		.pipe(tr.createWriteStream(".desc"));
+
+	return tr;
 }
 
 function projectsHTML() {
@@ -345,8 +356,7 @@ function introHTML() {
 	fs.createReadStream("templates/intro.html").pipe(tr);
 
 	// Write intro text into DIV.body
-	source("templates/intro.md")
-		.pipe(mapSync(marked))
+	markdown("templates/intro.md")
 		.pipe(tr.createWriteStream(".body"));
 
 	return tr.pipe(utf8ify());

@@ -1,66 +1,66 @@
 {
 	"projects": [
 		{
+			"id": "flikstak",
 			"title": "FlikStak",
 			"date": "2012\u20132013",
-			"desc": "Social tool to organize and share ideas. Worked on web application and backend APIs.",
 			"thumb": "flikstak-thumb.jpg",
 			"image": "flikstak.jpg"
 		},
 		{
+			"id": "trading",
 			"title": "Hunter Wise Trading Platform",
 			"date": "2009\u20132012",
-			"desc": "Electronic trading platform for commodities trading firm, handling $1b in trade volume yearly. Led project, created team, engineered full stack.",
 			"thumb": "trading-thumb.png",
 			"image": "trading.png"
 		},
 		{
+			"id": "zelda",
 			"title": "Zelda Madness",
 			"date": "2010",
-			"desc": "Fundraising website for video game charity marathon, raising money for cancer research and treatment. Created website and advised on technical aspects such as accepting credit card payments, video production, and streaming.",
 			"thumb": "zelda-thumb.jpg",
 			"image": "zelda.jpg"
 		},
 		{
+			"id": "amber",
 			"title": "Amber Pollard",
 			"date": "2009\u20132010",
-			"desc": "E-commerce solution for luxury handbag designer. Integrated PHP-based website with Shopify and built tools for reporting and maintenance.",
 			"thumb": "amber-thumb.jpg",
 			"image": "amber.jpg"
 		},
 		{
+			"id": "ami",
 			"title": "Atlantic Medical Imaging",
 			"date": "2009",
-			"desc": "Content management system and corporate website for medical imaging company. Created rich in-place website editing system for editors to rapidly release new content. With Data stored in MySQL with minimal PHP templating and API layer.",
 			"thumb": "ami-thumb.jpg",
 			"image": "ami.jpg"
 		},
 		{
+			"id": "tote",
 			"title": "Tides of the Elements",
 			"date": "2009",
-			"desc": "A 3D multiplayer fantasy fighting game created for UCI's Game Development class with a team of three programmers and collaboration with artists from LCAD. The game was written in Python using the OGRE 3D rendering engine. I worked on the overall architecture, game logic, physics, and networking. See project on Github.",
 			"thumb": "tote-thumb.jpg",
 			"image": "tote.jpg",
 			"link": "https://github.com/parshap/tote"
 		},
 		{
+			"id": "kali",
 			"title": "Kali Protectives Team Riders",
 			"date": "2009",
-			"desc": "A promotional tool created for this sporting goods manufacturer to showcase their sponsored athletes. Athletes could post photos, blog entries, and other content to be followed by fans. I worked with Kali's in-house designers to design and implement the project using PHP and the Kohana framework under a LAMP stack.",
 			"thumb": "kali-thumb.jpg",
 			"image": "kali.jpg"
 		},
 		{
+			"id": "greenhills",
 			"title": "Green Hills Memorial Park",
 			"date": "2008\u20132009",
-			"desc": "A content management system enabling this brand to connect with their customers by creating dynamic questionnaires. The application was created using PHP with results saved to flat files accessible via an administrative tool and with aggregate reports sent daily via email.",
 			"thumb": "greenhills-thumb.jpg",
 			"image": "greenhills.png"
 		},
 		{
+			"id": "nostrum",
 			"title": "Nostrum Inc.",
 			"date": "2008",
-			"desc": "Website and blog for marketing and advertising firm.",
 			"thumb": "nostrum-thumb.png",
 			"image": "nostrum.png"
 		}

@@ -1,0 +1,1 @@
+A 3D multiplayer fantasy fighting game created for UCI's Game Development class with a team of three programmers and collaboration with artists from LCAD. The game was written in Python using the OGRE 3D rendering engine. I worked on the overall architecture, game logic, physics, and networking. See project on Github.

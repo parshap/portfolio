@@ -1,0 +1,1 @@
+Content management system and corporate website for medical imaging company. Created rich in-place website editing system for editors to rapidly release new content. With Data stored in MySQL with minimal PHP templating and API layer.
