@@ -360,7 +360,6 @@ function utf8ify() {
 
 function portfolioHTML() {
 	return concatStreams([
-		// source("templates/intro.html"),
 		introHTML(),
 		projectsHTML(),
 	]).pipe(template({ name: "home" }));
