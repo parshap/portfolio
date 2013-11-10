@@ -24,7 +24,7 @@
 		{
 			"title": "Amber Pollard",
 			"date": "2009\u20132010",
-			"desc": "E-commerce solution for luxury handbag designer. Integrated PHP-based website with Shopify and built tooling for reporting and upkeep.",
+			"desc": "E-commerce solution for luxury handbag designer. Integrated PHP-based website with Shopify and built tools for reporting and maintenance.",
 			"thumb": "amber-thumb.jpg",
 			"image": "amber.jpg"
 		},
@@ -38,7 +38,7 @@
 		{
 			"title": "Tides of the Elements",
 			"date": "2009",
-			"desc": "Real-time multiplayer fantasy fighting game.",
+			"desc": "A 3D multiplayer fantasy fighting game created for UCI's Game Development class with a team of three programmers and collaboration with artists from LCAD. The game was written in Python using the OGRE 3D rendering engine. I worked on the overall architecture, game logic, physics, and networking. See project on Github.",
 			"thumb": "tote-thumb.jpg",
 			"image": "tote.jpg",
 			"link": "https://github.com/parshap/tote"
@@ -46,14 +46,14 @@
 		{
 			"title": "Kali Protectives Team Riders",
 			"date": "2009",
-			"desc": "Private social network showcasing sporting goods manufacturer's sponsored athletes.",
+			"desc": "A promotional tool created for this sporting goods manufacturer to showcase their sponsored athletes. Athletes could post photos, blog entries, and other content to be followed by fans. I worked with Kali's in-house designers to design and implement the project using PHP and the Kohana framework under a LAMP stack.",
 			"thumb": "kali-thumb.jpg",
 			"image": "kali.jpg"
 		},
 		{
 			"title": "Green Hills Memorial Park",
 			"date": "2008\u20132009",
-			"desc": "Content management system to connect customers with brand.",
+			"desc": "A content management system enabling this brand to connect with their customers by creating dynamic questionnaires. The application was created using PHP with results saved to flat files accessible via an administrative tool and with aggregate reports sent daily via email.",
 			"thumb": "greenhills-thumb.jpg",
 			"image": "greenhills.png"
 		},
