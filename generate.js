@@ -22,7 +22,9 @@ var fs = require("fs"),
 	browserify = require("browserify"),
 	uglify = require("uglify-js"),
 	_ = require("lodash"),
-	datauri = require("data-uri-stream");
+	datauri = require("data-uri-stream"),
+	trumpet = require("trumpet"),
+	marked = require("marked");
 
 module.exports = function() {
 	return combineStreams([
@@ -336,9 +338,30 @@ function pager(prefix) {
 	return duplexer(input, output);
 }
 
+function introHTML() {
+	var tr = trumpet();
+
+	// Input template into trumpet
+	fs.createReadStream("templates/intro.html").pipe(tr);
+
+	// Write intro text into DIV.body
+	source("templates/intro.md")
+		.pipe(mapSync(marked))
+		.pipe(tr.createWriteStream(".body"));
+
+	return tr.pipe(utf8ify());
+}
+
+function utf8ify() {
+	return mapSync(function(data) {
+		return data.toString("utf8");
+	});
+}
+
 function portfolioHTML() {
 	return concatStreams([
-		source("templates/intro.html"),
+		// source("templates/intro.html"),
+		introHTML(),
 		projectsHTML(),
 	]).pipe(template({ name: "home" }));
 }

@@ -23,7 +23,9 @@
     "uglify-js": "~2.4.0",
     "css": "~1.4.4",
     "lodash": "~2.2.1",
-    "data-uri-stream": "~1.0.0"
+    "data-uri-stream": "~1.0.0",
+    "trumpet": "~1.6.2",
+    "marked": "~0.2.10"
   },
   "devDependencies": {
     "tape": "~1.1.1"
