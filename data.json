@@ -22,16 +22,9 @@
 			"image": "zelda.jpg"
 		},
 		{
-			"id": "amber",
-			"title": "Amber Pollard",
-			"date": "2009\u20132010",
-			"thumb": "amber-thumb.jpg",
-			"image": "amber.jpg"
-		},
-		{
 			"id": "ami",
 			"title": "Atlantic Medical Imaging",
-			"date": "2009",
+			"date": "2009\u20132010",
 			"thumb": "ami-thumb.jpg",
 			"image": "ami.jpg"
 		},
@@ -42,6 +35,13 @@
 			"thumb": "tote-thumb.jpg",
 			"image": "tote.jpg",
 			"link": "https://github.com/parshap/tote"
+		},
+		{
+			"id": "amber",
+			"title": "Amber Pollard",
+			"date": "2009",
+			"thumb": "amber-thumb.jpg",
+			"image": "amber.jpg"
 		},
 		{
 			"id": "kali",
