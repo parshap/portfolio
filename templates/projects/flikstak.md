@@ -1,3 +1,5 @@
+# Social tool to organize and share ideas
+
 Created modular back-end service architecture using AWS and Node.js.
 Designed user experiences to be consistent between mobile and web
 platforms. Engineered an ["isomorphic JavaScript"] web application using

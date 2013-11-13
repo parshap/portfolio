@@ -1,1 +1,8 @@
-A promotional tool created for this sporting goods manufacturer to showcase their sponsored athletes. Athletes could post photos, blog entries, and other content to be followed by fans. I worked with Kali's in-house designers to design and implement the project using PHP and the Kohana framework under a LAMP stack.
+# Private social network for sporting goods manufacturer
+
+Used to show off company sponsored athletes. Athletes post photos, blog
+entries, and other content to be followed by fans. Worked with Kali's
+in-house designers to implement using PHP and [Kohana] framework under a
+LAMP stack.
+
+[kohana]: http://kohanaphp.com
