@@ -1,4 +1,4 @@
-# 3D multiplayer fantasy fighting game
+# A 3D multiplayer fantasy fighting game
 
 Created for [*Computer Game Development* at UCI][cs113] with a team of
 three programmers and collaboration with artists from [LCAD]. The game
