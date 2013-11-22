@@ -230,6 +230,14 @@ a, a:hover {
 
 		.body {
 			color: lighten(@gray, 15%);
+
+			a {
+				border-bottom: 1px dotted;
+				&:hover {
+					color: @gray;
+					border-bottom: 1px solid;
+				}
+			}
 		}
 
 		.head {
