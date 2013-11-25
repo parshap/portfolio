@@ -10,8 +10,9 @@ impactful contributions to society.
 </span>
 
 <span class="text-wrapper">
-You can also check out my and [GitHub profile!][gh]
+You can also check out my [resume] and [GitHub profile!][gh]
 </span>
 
 [simply]: http://www.infoq.com/presentations/Simple-Made-Easy "Simple Made Easy by Rich Hickey"
+[resume]: http://parshap.com/parshap-resume.pdf
 [gh]: https://github.com/parshap "parshap on GitHub"
