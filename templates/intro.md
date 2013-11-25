@@ -6,7 +6,7 @@ I have a passion for modeling large systems [simply] and creating great user exp
 When not hacking on my latest project, I enjoy traveling, tennis, and
 skiing.
 I'm always looking for new opportunities to apply my skills and make
-impactful contributions.
+impactful contributions to society.
 </span>
 
 <span class="text-wrapper">
