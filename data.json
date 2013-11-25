@@ -49,20 +49,6 @@
 			"date": "2009",
 			"thumb": "kali-thumb.jpg",
 			"image": "kali.jpg"
-		},
-		{
-			"id": "greenhills",
-			"title": "Green Hills Memorial Park",
-			"date": "2008\u20132009",
-			"thumb": "greenhills-thumb.jpg",
-			"image": "greenhills.png"
-		},
-		{
-			"id": "nostrum",
-			"title": "Nostrum Inc.",
-			"date": "2008",
-			"thumb": "nostrum-thumb.png",
-			"image": "nostrum.png"
 		}
 	]
 }
