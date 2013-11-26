@@ -35,6 +35,7 @@ module.exports = function() {
 		staticFile("favicon.ico", "favicon.ico", TYPES.ico),
 		portfolio(),
 		images(),
+		resume(),
 	]);
 };
 
@@ -43,7 +44,13 @@ var TYPES = {
 	"txt": "text/plain",
 	"ico": "image/x-icon",
 	"png": "image/png",
+	"pdf": "application/pdf",
 };
+
+function resume() {
+	return fs.createReadStream("parshap-resume.pdf")
+		.pipe(page("parshap-resume.pdf", TYPES.pdf));
+}
 
 function staticFile(src, dst, type) {
 	if ( ! dst ) dst = src;

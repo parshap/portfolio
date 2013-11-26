@@ -15,7 +15,7 @@ touch with me on [Twitter] or [via email][email].
 </span>
 
 [simply]: http://www.infoq.com/presentations/Simple-Made-Easy "Simple Made Easy by Rich Hickey"
-[resume]: http://parshap.com/parshap-resume.pdf
+[resume]: ../parshap-resume.pdf
 [gh]: https://github.com/parshap "parshap on GitHub"
 [Twitter]: https://twitter.com/parshap "@parshap"
 [email]: mailto:parshap@gmail.com> "parshap@gmail.com"

@@ -35,6 +35,22 @@ do
 	rm dist/$file.gz
 done
 
+# Compress resume
+echo "Compressing parshap-resume.pdf (gzip)"
+gzip -c dist/parshap-resume.pdf > dist/parshap-resume.pdf.gz
+
+# Copy resume to S3
+aws s3 cp dist/parshap-resume.pdf.gz \
+	s3://www.parshap.com/parshap-resume.pdf \
+	--region us-east-1 \
+	--acl public-read \
+	--content-encoding gzip \
+	--cache-control "max-age=$day, public" \
+	--content-language en
+
+# Remove resume gzip temp file
+rm dist/parshap-resume.pdf.gz
+
 # Copy images
 for file in $images
 do
