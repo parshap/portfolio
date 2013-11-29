@@ -370,10 +370,13 @@ a {
 		height: 100%;
 	}
 
-	// Header background gets height set in JS - see ./lib/effects.js
-	// And it must scroll away with the header, not be fixed
-	#headerbg {
-		position: absolute;
+	// Header background
+	.header-wrapper {
+		position: relative;
+		#headerbg {
+			position: absolute;
+			height: 100%;
+		}
 	}
 
 	// -- 3D Transforms
