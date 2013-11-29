@@ -251,7 +251,7 @@ a {
 		.date, .desc {
 			display: inline;
 			&::after {
-				content: ".";
+				content: ". ";
 			}
 		}
 	}
@@ -259,7 +259,7 @@ a {
 
 // -- Advanced Effects
 
-@media (min-width: @screen-advanced) {
+@media screen and (min-width: @screen-advanced) {
 	body {
 		padding-bottom: @section-spacing;
 	}
@@ -403,5 +403,24 @@ a {
 	#projects {
 		// Transform from the top (lien up with #intro)
 		.transform-origin(center top);
+	}
+}
+
+@media print {
+	#headerbg, #bodybg {
+		display: none !important;
+	}
+
+	#photo {
+		display: none !important;
+	}
+
+	#intro, #projects {
+		opacity: 1 !important;
+		.transform(~"none !important");
+	}
+
+	#projects .project {
+		page-break-before: always;
 	}
 }
