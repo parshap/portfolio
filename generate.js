@@ -315,42 +315,16 @@ function projects() {
 }
 
 function renderProject(project) {
-	var tr = trumpet(),
-		text = projectText(project);
+	var tr = trumpet();
 
 	// Input project template into trumpet
 	mustache("templates/project.mustache", project).pipe(tr);
 
-	text.desc.pipe(tr.createWriteStream(".desc"));
-	text.body.pipe(tr.createWriteStream(".body"));
+	// Input project body text
+	markdown("templates/projects/" + project.id + ".md")
+		.pipe(tr.createWriteStream(".body"));
 
 	return tr;
-}
-
-function projectText(project) {
-	var desc = through(), body = concater();
-	var md = markdown("templates/projects/" + project.id + ".md");
-	var tr = trumpet();
-
-	md.pipe(tr);
-
-	tr.createReadStream("h1").pipe(desc);
-
-	tr.selectAll("p", function(elem) {
-		body.write(elem.createReadStream());
-	});
-
-	tr.on("end", function() {
-		body.end();
-		// Force end on desc stream in case no h1 element present
-		// See https://github.com/substack/node-trumpet/pull/24
-		desc.end();
-	});
-
-	return {
-		desc: desc,
-		body: body,
-	};
 }
 
 function projectsHTML() {
