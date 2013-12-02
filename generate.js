@@ -5,7 +5,6 @@ var ENV = process.env.NODE_ENV;
 
 var fs = require("fs"),
 	path = require("path"),
-	domain = require("domain").create,
 	concat = require("concat-stream"),
 	map = require("map-stream"),
 	mapSync = require("event-stream").mapSync,
@@ -54,7 +53,9 @@ function resume() {
 
 function staticFile(src, dst, type) {
 	if ( ! dst ) dst = src;
-	return source(src).pipe(page(dst, type));
+	return fs.createReadStream(src)
+		.pipe(utf8ify())
+		.pipe(page(dst, type));
 }
 
 function staticHTML(src, dst) {
@@ -105,13 +106,6 @@ function concater() {
 			callback(null, data);
 		}));
 	});
-}
-
-// Create a domain with errors bound to the given stream
-function streamDomain(stream) {
-	var d = domain();
-	d.on("error", stream.emit.bind(stream, "error"));
-	return d;
 }
 
 function template(context) {
@@ -257,11 +251,12 @@ function sink() {
 // Stream that emits entire file content as a single data event
 function source(path) {
 	var stream = sink();
-	var d = streamDomain(stream);
-	fs.readFile(path, "utf8", d.intercept(function(data) {
-		stream.queue(data);
-		stream.queue(null);
-	}));
+	fs.createReadStream(path)
+		.pipe(utf8ify())
+		.pipe(concat(function(data) {
+			stream.queue(data);
+			stream.queue(null);
+		}));
 	return stream;
 }
 
