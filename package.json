@@ -20,11 +20,11 @@
     "browserify": "~2.34.3",
     "prefixed": "0.0.0",
     "raf.js": "0.0.3",
-    "uglify-js": "~2.4.0",
+    "uglify-js": "~2.4.6",
     "css": "~1.4.4",
     "lodash": "~2.2.1",
     "data-uri-stream": "~1.0.0",
-    "trumpet": "~1.6.2",
+    "trumpet": "~1.6.3",
     "marked": "~0.2.10"
   },
   "devDependencies": {
