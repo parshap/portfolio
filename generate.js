@@ -116,12 +116,18 @@ function template(context) {
 		uristream = datauri({ type: TYPES.ico }),
 		favicon = fs.createReadStream("favicon.ico").pipe(uristream);
 
-	mustachestreams("templates/template.mustache", context, {
+	var streams = {
 		style: style(firstPass),
 		favicon: favicon,
 		script: script(),
-		ga: ga(),
-	}).pipe(output);
+	};
+
+	if (ENV === "production") {
+		streams.ga = ga();
+	}
+
+	mustachestreams("templates/template.mustache", context, streams)
+		.pipe(output);
 
 	return duplexer(input, output);
 }
@@ -129,7 +135,7 @@ function template(context) {
 // Helper to create compressor stream creator functions
 function compressor(fn) {
 	return function() {
-		if (process.env.NODE_ENV !== "production") {
+		if (ENV !== "production") {
 			return through();
 		}
 
@@ -150,7 +156,7 @@ var jscompressor = compressor(function(source) {
 });
 
 function csscompressor(dom) {
-	if (process.env.NODE_ENV !== "production") {
+	if (ENV !== "production") {
 		return through();
 	}
 
@@ -159,7 +165,7 @@ function csscompressor(dom) {
 		mapSync(function(data) {
 			console.time("css-stringify");
 			var code = css.stringify(data, {
-				compress: process.env.NODE_ENV === "production",
+				compress: true,
 			});
 			console.timeEnd("css-stringify");
 			return code;
