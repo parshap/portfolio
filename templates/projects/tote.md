@@ -1,9 +1,9 @@
-# A 3D multiplayer fantasy fighting game
-
-Created for [*Computer Game Development* at UCI][cs113] with a team of
-three programmers and collaboration with artists from [LCAD]. The game
-was written in Python using the [OGRE 3D rendering engine][OGRE]. I
-worked on the overall architecture, game logic, physics, and networking.
+Created 3D multiplayer fantasy fighting game for [*Computer Game
+Development*][cs113] with team of three programmers and
+collaboration with artists from [LCAD].
+Game was written in Python using the [OGRE 3D rendering
+engine][OGRE].
+Worked on the overall architecture, game logic, physics, and networking.
 [See the project on Github.][gh]
 
 [cs113]: http://www.ics.uci.edu/ugrad/courses/details.php?id=3 "CS 113: Computer Game Development"

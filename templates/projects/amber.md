@@ -1,4 +1,5 @@
 # Online store for luxury handbag designer
 
-Created PHP web application and integrated with a Shopify store. Built
-tools for automated reporting and bulk operations.
+Created online store for luxury handbag designer. Built PHP web
+application and integrated with Shopify. Built tools for automated
+reporting and bulk operations such as price changes.
