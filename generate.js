@@ -126,6 +126,7 @@ function template(context) {
 		style: style(firstPass),
 		favicon: favicon,
 		script: script(),
+		ga: ga(),
 	}).pipe(output);
 
 	return duplexer(input, output);
@@ -175,6 +176,12 @@ function csscompressor(dom) {
 function script() {
 	return browserify("./client.js")
 		.bundle()
+		.pipe(jscompressor());
+}
+
+function ga() {
+	return fs.createReadStream("./ga.js")
+		.pipe(utf8ify())
 		.pipe(jscompressor());
 }
 
