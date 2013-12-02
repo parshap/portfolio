@@ -1,5 +1,5 @@
 <span class="text-wrapper">
-I am a computer scientist, technology enthusiast, and adventurer.
+I am a computer scientist, technology enthusiast, and [adventurer].
 I have been programming computers since my family's *Commodore 128* and
 can't stop.
 I have a passion for creating [simple] models of large systems and great
@@ -14,6 +14,7 @@ You can check out my [resume] and [GitHub profile][gh].
 Get in touch with me on [Twitter] or [via email][email].
 </span>
 
+[adventurer]: images/adventurer.jpg "Shayna and I at Whiting Ranch Wilderness Park, April 2013"
 [simple]: http://www.infoq.com/presentations/Simple-Made-Easy "Simple Made Easy by Rich Hickey"
 [resume]: ../parshap-resume.pdf
 [gh]: https://github.com/parshap "parshap on GitHub"
