@@ -3,5 +3,7 @@
 m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-ga('create', 'UA-7767784-3', 'parshap.com');
+ga('create', 'UA-7767784-3', 'parshap.com', {
+	siteSpeedSampleRate: 100,
+});
 ga('send', 'pageview');
