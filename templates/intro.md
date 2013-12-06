@@ -1,11 +1,11 @@
 <span class="text-wrapper">
 I am a computer scientist, technology enthusiast, and [adventurer].
-I have been programming computers since my family's *Commodore 128* and
-can't stop.
+I have been programming computers since my *Commodore 128* and can't
+imagine doing anything else.
 I have a passion for creating [simple] models of large systems and great
 user experiences.
-When not hacking on my latest project, I like traveling, tennis, skiing,
-and food.
+When not hacking on my latest project, I enjoy traveling, tennis, skiing,
+and great foods.
 I look for ways to make an impact on society.
 </span>
 
