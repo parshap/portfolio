@@ -1,5 +1,5 @@
-Created 3D multiplayer fantasy fighting game for [*Computer Game
-Development*][cs113] with team of three programmers and
+Created 3D multiplayer fantasy fighting game for *[CS113: Computer Game
+Development][cs113]* with team of three programmers and
 collaboration with artists from [LCAD].
 Game was written in Python using the [OGRE 3D rendering
 engine][OGRE].
