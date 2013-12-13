@@ -1,12 +1,12 @@
 <span class="text-wrapper">
 I am a computer scientist, technology enthusiast, and [adventurer].
-I have been programming computers since my *Commodore 128* and can't
-imagine doing anything else.
-I have a passion for creating [simple] models of large systems and great
-user experiences.
+I've been programming computers since my *Commodore 128* at age four
+and can't imagine doing anything else.
+I have a passion for creating [simple] models of large systems and
+crafting great user experiences.
 When not hacking on my latest project, I enjoy traveling, tennis, skiing,
-and great foods.
-I look for ways to make an impact on society.
+and new experiences with friends.
+I look for ways to make impactful contributions to society.
 </span>
 
 <span class="text-wrapper">
