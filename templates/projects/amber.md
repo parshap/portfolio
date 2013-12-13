@@ -1,5 +1,3 @@
-I was approached by a local luxury handbag designer to help build their
-online presence.
-I built a PHP web application and integrated with Shopify to enable
-online purchasing. I also built tools for automated reporting and bulk
-operations.
+Worked with local luxury handbag designer to build online presence.
+Built PHP web application and integrated with Shopify to enable online
+purchases. Built tools for automated reporting and bulk operations.
