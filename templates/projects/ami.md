@@ -1,4 +1,3 @@
-Content management system.
 I created a rich client-side in-place content editing experience for
 this medical imaging company's corporate website.
 This enabled non-technical authors to rapidly prototype and release new

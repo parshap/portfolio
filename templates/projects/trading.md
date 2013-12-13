@@ -1,4 +1,3 @@
-*[Electronic trading platform][etp]* for commodities.
 I worked with industry experts to automate company's trading process and
 create a distributed workflow for traders.
 The platform played a critical role in

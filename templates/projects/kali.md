@@ -1,4 +1,3 @@
-Private social network.
 I created this social network for a sporting goods manufacturer to
 showcase their sponsored athletes and build a fan community.
 Athletes post photos, blog entries, and other content subscribed to and

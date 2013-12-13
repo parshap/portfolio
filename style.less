@@ -241,15 +241,15 @@ a {
 			color: lighten(@gray, 15%);
 		}
 
-		.date {
+		.head {
 			margin: 0 0 0.25em 0;
 		}
 
-		.desc {
+		.subtitle {
 			font-style: italic;
 		}
 
-		.date, .desc {
+		.date, .subtitle {
 			display: inline;
 			&::after {
 				content: ". ";
@@ -333,11 +333,11 @@ a {
 			padding-right: 35px;
 		}
 
-		.date, .desc, .body {
+		.date, .subtitle, .body {
 			display: block;
 		}
 
-		.desc::after, .date::after {
+		.subtitle::after, .date::after {
 			content: none;
 		}
 	}

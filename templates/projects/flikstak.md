@@ -1,4 +1,3 @@
-Social bookmarking tool.
 I worked with the team on product design, making sure
 features were cohesive and user experiences [consistent][].
 I designed the back-end service-oriented architecture using *Node.js*

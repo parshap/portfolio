@@ -1,4 +1,3 @@
-3D multiplayer fantasy fighting game.
 I created this game for a [game development course][cs113] at the
 *University of California, Irvine* with a team of three programmers and
 collaboration with artists from [LCAD].
