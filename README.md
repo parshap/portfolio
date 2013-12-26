@@ -3,9 +3,7 @@
 This project is my personal portfolio showcasing some of my programming
 work. It is in the form of a static site generator (see `generate.js`).
 These static resources are hosted on the Internet
-(http://parshap.com/me/) using AWS S3 + CloudFront (see `deploy.sh`).
-See the *How It Works* section below
-for more information.
+(http://parshap.com/me/) using AWS S3 and CloudFront (see `deploy.sh`).
 
 ## Usage
 
@@ -25,7 +23,3 @@ Generate the site and upload it to Amazon S3
 ### `make test`
 
 Run tests
-
-## How It Works
-
-TODO
