@@ -17,7 +17,7 @@ var fs = require("fs"),
 	findit = require("findit"),
 	mime = require("mime"),
 	css = require("css"),
-	eliminate = require("css-eliminator"),
+	eliminator = require("css-eliminator"),
 	browserify = require("browserify"),
 	uglify = require("uglify-js"),
 	_ = require("lodash"),
@@ -155,13 +155,13 @@ var jscompressor = compressor(function(source) {
 	return code;
 });
 
-function csscompressor(dom) {
+function csscompressor(html) {
 	if (ENV !== "production") {
 		return through();
 	}
 
 	return pipeline(
-		eliminator(dom),
+		csseliminator(html),
 		mapSync(function(data) {
 			console.time("css-stringify");
 			var code = css.stringify(data, {
@@ -405,18 +405,20 @@ function ender(streams) {
 	return output;
 }
 
-function eliminator(htmlStream) {
+function csseliminator(htmlStream) {
 	var input = through();
 	var output = through();
 	var html = htmlStream.pipe(concat());
 	var source = input.pipe(concat());
 	ender([htmlStream, input]).on("end", function() {
 		var cssString = source.getBody();
+		var htmlString = html.getBody();
+		var eliminate = eliminator(htmlString);
 		console.time("css-parse");
 		cssString = css.parse(cssString);
 		console.timeEnd("css-parse");
 		console.time("css-eliminator");
-		cssString = eliminate(cssString, html.getBody());
+		cssString = eliminate(cssString);
 		console.timeEnd("css-eliminator");
 		output.emit("data", cssString);
 		output.emit("end");
