@@ -24,7 +24,7 @@ do
 		--acl public-read \
 		--content-type "text/html; charset=utf-8" \
 		--cache-control "max-age=$day, public" \
-		--content-language en
+		--content-language "en-us"
 done
 
 # Copy resume to S3
@@ -33,7 +33,7 @@ aws s3 cp dist/parshap-resume.pdf \
 	--region us-east-1 \
 	--acl public-read \
 	--cache-control "max-age=$day, public" \
-	--content-language en
+	--content-language "en-us"
 
 # Copy images
 for file in $images
