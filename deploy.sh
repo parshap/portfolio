@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-day=$(expr 60 \* 60 \* 24)
+minute=60
+hour=$(expr $minute \* 60)
+day=$(expr $hour \* 24)
 week=$(expr $day \* 7)
 week=$(expr $day \* 365)
 
@@ -32,7 +34,15 @@ aws s3 cp dist/parshap-resume.pdf \
 	s3://www.parshap.com/parshap-resume.pdf \
 	--region us-east-1 \
 	--acl public-read \
-	--cache-control "max-age=$day, public" \
+	--cache-control "max-age=$hour, public" \
+	--content-language "en-us"
+
+# Short cache resume
+aws s3 cp dist/parshap-resume.pdf \
+	s3://www.parshap.com/parshap-resume-04a4.pdf \
+	--region us-east-1 \
+	--acl public-read \
+	--cache-control "max-age=$minute, public" \
 	--content-language "en-us"
 
 # Copy images
